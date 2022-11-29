@@ -16,12 +16,14 @@ Renderer* Renderer::getInstance(){
     return instance;
 }
 
-void Renderer::draw(GameObject& gameObject) {
-    glm::mat4 transform = glm::mat4(1.0f);
-    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-    transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+void Renderer::draw(GameObject& gameObject, glm::vec2 position, glm::vec2 size, float rotationRadians) {
+    glm::mat4 modelView = glm::mat4(1.0f);
+    modelView = glm::translate(modelView, glm::vec3(position, 0.0f));
+    modelView = glm::rotate(modelView, glm::radians(rotationRadians), glm::vec3(0.0f, 0.0f, 1.0f));
+    modelView = glm::scale(modelView, glm::vec3(size, 1.0f));
+
     gameObject.getMesh()->getVertexArray()->bind();
-    gameObject.getShader()->setMatrix4f("uTransform", transform, true);
+    gameObject.getShader()->setMatrix4f("uModelView", modelView, true);
     //gameObject.getShader()->use();
     glDrawElements(GL_TRIANGLES, gameObject.getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
     gameObject.getMesh()->getVertexArray()->unbind();

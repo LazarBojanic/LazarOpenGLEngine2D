@@ -5,6 +5,7 @@
 #include "GameObjectManager.hpp"
 #include "Renderer.hpp"
 #include "Triangle.hpp"
+#include "Quad.hpp"
 
 enum GameState {
     GAME_ACTIVE,
@@ -19,6 +20,9 @@ private:
     GameState gameState;
     bool* keys;
     unsigned int width, height;
+
+
+    float x, y, xSpeed, ySpeed;
     
 public:
     Game(unsigned int width, unsigned int height);

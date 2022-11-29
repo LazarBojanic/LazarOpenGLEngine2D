@@ -54,6 +54,7 @@ void Application::initWindow() {
     initGlad();
     glfwSetKeyCallback(this->window, key_callback);
     glfwSetFramebufferSizeCallback(this->window, framebuffer_size_callback);
+    glfwSwapInterval(1);
 }
 
 void Application::run() {
