@@ -58,7 +58,6 @@ void Application::initWindow() {
 }
 
 void Application::run() {
-    //std::cout << glGetError() << std::endl;
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
     while (!glfwWindowShouldClose(this->window)){

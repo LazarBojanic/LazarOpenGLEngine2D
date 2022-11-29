@@ -19,19 +19,28 @@ ResourceManager* ResourceManager::getInstance() {
 
 Shader* ResourceManager::addShader(std::string vertexShaderPath, std::string fragmentShaderPath, std::string name){
     Shader* shader = new Shader(vertexShaderPath, fragmentShaderPath, name);
-    std::vector<Shader*> tempList = *this->shaderList;
-    if (std::find(tempList.begin(), tempList.end(), shader) == tempList.end()) {
-        tempList.push_back(shader);
+    //std::vector<Shader*> tempList = *this->shaderList;
+    if (std::find(this->shaderList->begin(), this->shaderList->end(), shader) == this->shaderList->end()) {
+        this->shaderList->push_back(shader);
     }
+    /*for (int i = 0; i < this->shaderList->size(); i++) {
+        if (this->shaderList->at(i)->getName() != name) {
+            this->shaderList->push_back(shader);
+        }
+    }*/
     return shader;
 }
 
 Texture2D* ResourceManager::addTexture2D(std::string texture2DPath, bool alpha, std::string name){
     Texture2D* texture2D = new Texture2D(texture2DPath, alpha, name);
-    std::vector<Texture2D*> tempList = *this->texture2DList;
-    if (std::find(tempList.begin(), tempList.end(), texture2D) == tempList.end()) {
-        tempList.push_back(texture2D);
+    if (std::find(this->texture2DList->begin(), this->texture2DList->end(), texture2D) == this->texture2DList->end()) {
+        this->texture2DList->push_back(texture2D);
     }
+    /*for (int i = 0; i < this->texture2DList->size() + 1; i++) {
+        if (this->texture2DList->at(i)->getName() != name) {
+            this->texture2DList->push_back(texture2D);
+        }
+    }*/
     return texture2D;
 }
 

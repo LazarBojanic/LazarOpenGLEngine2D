@@ -21,7 +21,7 @@ private:
     bool* keys;
     unsigned int width, height;
 
-
+    float logoWidth, logoHeight;
     float x, y, xSpeed, ySpeed;
     
 public:

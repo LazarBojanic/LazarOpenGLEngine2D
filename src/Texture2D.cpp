@@ -6,6 +6,8 @@ Texture2D::Texture2D() {
 }
 
 Texture2D::Texture2D(std::string textureFilePath, bool alpha, std::string name) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     this->name = name;
     this->wrap_S = GL_REPEAT;
     this->wrap_T = GL_REPEAT;
@@ -17,7 +19,8 @@ Texture2D::Texture2D(std::string textureFilePath, bool alpha, std::string name) 
     }
     glGenTextures(1, &this->textureID);
     int tempWidth, tempHeight, tempNumberOfChannels;
-    unsigned char* data = stbi_load(textureFilePath.c_str(), &tempWidth, &tempHeight, &tempNumberOfChannels, 0);
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* data = stbi_load(textureFilePath.c_str(), &tempWidth, &tempHeight, &tempNumberOfChannels, STBI_rgb_alpha);
     this->width = tempWidth;
     this->height = tempHeight;
     generate(data);
@@ -26,18 +29,12 @@ Texture2D::Texture2D(std::string textureFilePath, bool alpha, std::string name) 
 Texture2D::~Texture2D() {
 }
 void Texture2D::generate(unsigned char* data) {
-    
     bind(0);
     glTexImage2D(GL_TEXTURE_2D, 0, this->imageFormat, this->width, this->height, 0, this->imageFormat, GL_UNSIGNED_BYTE, data);
-    std::cout << glGetError() << std::endl;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap_S);
-    std::cout << glGetError() << std::endl;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap_T);
-    std::cout << glGetError() << std::endl;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filterMin);
-    std::cout << glGetError() << std::endl;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filterMax);
-    std::cout << glGetError() << std::endl;
     unbind();
 }
 void Texture2D::bind(unsigned int textureChannel) {

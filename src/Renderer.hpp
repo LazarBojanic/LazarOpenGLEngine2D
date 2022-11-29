@@ -2,6 +2,7 @@
 
 #include "GLData.hpp"
 #include "GameObject.hpp"
+#include "ResourceManager.hpp"
 
 class Renderer {
 private:

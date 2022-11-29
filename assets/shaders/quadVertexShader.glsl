@@ -10,6 +10,8 @@ out vec2 vTextureCoords;
 uniform mat4 uModelView;
 uniform mat4 uProjection;
 
+
+
 void main(){
     gl_Position = uProjection * uModelView * vec4(iPos, 1.0f);
     vColor = vec4(iColor, 1.0f);
