@@ -11,6 +11,7 @@ Game::Game(unsigned int width, unsigned int height) {
 
 Game::~Game() {
 	delete this->keys;
+	delete this->colorsArray;
 }
 
 Game* Game::getInstance(unsigned int width, unsigned int height) {
@@ -34,7 +35,8 @@ void Game::init() {
 	Triangle* triangle = new Triangle();
 	Quad* quad = new Quad();
 	
-	
+	quadShader->setVector4f("uDvdColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
+
 	
 	
 
@@ -77,7 +79,7 @@ void Game::update(float dt) {
 static float rotation = 0;
 
 void Game::render(float dt) {
-	rotation = glm::pow(glfwGetTime(), 3);
+	//rotation = glm::pow(glfwGetTime(), 4);
 	Renderer::getInstance()->colorBackground(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	GameObject* triangleGameObject = GameObjectManager::getInstance()->getGameObjectByName("triangleGameObject");
@@ -90,9 +92,23 @@ void Game::render(float dt) {
 	this->y += this->ySpeed;
 
 	if (this->x + this->logoWidth / 2 >= this->width || this->x - this->logoWidth / 2 <= 0) {
+		srand(time(NULL));
+		int colorIndex = rand() % 8;
+		glm::vec4 dvdColor = this->colorsArray[colorIndex];
+
+		std::cout << "Red: " << dvdColor.x << " | " << "Green: " << dvdColor.y << " | " << "Blue: " << dvdColor.z << " | " << std::endl;
+
+		ResourceManager::getInstance()->getShaderByName("quadShader")->setVector4f("uDvdColor", dvdColor, true);
 		this->xSpeed = -this->xSpeed;
 	}
 	if (this->y + this->logoHeight / 2 >= this->height || this->y - this->logoHeight / 2 <= 0) {
+		srand(time(NULL));
+		int colorIndex = rand() % 8;
+		glm::vec4 dvdColor = this->colorsArray[colorIndex];
+
+		std::cout << "Red: " << dvdColor.x << " | " << "Green: " << dvdColor.y << " | " << "Blue: " << dvdColor.z << " | " << std::endl;
+
+		ResourceManager::getInstance()->getShaderByName("quadShader")->setVector4f("uDvdColor", dvdColor, true);
 		this->ySpeed = -this->ySpeed;
 	}
 }

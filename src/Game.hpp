@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "GLData.hpp"
 #include "ResourceManager.hpp"
 #include "GameObjectManager.hpp"
@@ -23,6 +24,18 @@ private:
 
     float logoWidth, logoHeight;
     float x, y, xSpeed, ySpeed;
+
+    glm::vec4* colorsArray = new glm::vec4[8]{
+        glm::vec4(0.7f, 0.4f, 0.4f, 1.0f),
+        glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+        glm::vec4(0.4f, 0.4f, 0.7f, 1.0f),
+        glm::vec4(1.0f, 1.0f, 0.0f, 1.0f),
+        glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+        glm::vec4(0.0f, 1.0f, 1.0f, 1.0f),
+        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+        glm::vec4(0.75f, 0.0f, 0.75f, 1.0f)
+    };
+    int colorsArrayCount = 8;
     
 public:
     Game(unsigned int width, unsigned int height);

@@ -1,5 +1,8 @@
 #pragma once
 
+#define MIN_RAND 100
+#define MAX_RAND 256
+
 #include <map>
 #include <string>
 #include <fstream>
@@ -9,6 +12,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <array>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
