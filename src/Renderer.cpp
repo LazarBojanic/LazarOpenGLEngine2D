@@ -17,9 +17,13 @@ Renderer* Renderer::getInstance(){
 }
 
 void Renderer::draw(GameObject& gameObject) {
+    glm::mat4 transform = glm::mat4(1.0f);
+    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+    transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
     gameObject.getMesh()->getVertexArray()->bind();
-    gameObject.getShader()->use();
-    glDrawElements(GL_TRIANGLES, gameObject.getMesh()->getVertexCount(), GL_UNSIGNED_INT, 0);
+    gameObject.getShader()->setMatrix4f("uTransform", transform, true);
+    //gameObject.getShader()->use();
+    glDrawElements(GL_TRIANGLES, gameObject.getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
     gameObject.getMesh()->getVertexArray()->unbind();
 }
 

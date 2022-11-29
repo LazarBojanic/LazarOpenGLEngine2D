@@ -2,6 +2,7 @@
 
 #include "GLData.hpp"
 #include "IndexBuffer.hpp"
+#include "Primitive.hpp"
 
 class VertexBuffer {
 private:
@@ -11,6 +12,7 @@ private:
 	IndexBuffer* indexBuffer;
 public:
 	VertexBuffer(float* data, unsigned int dataSize, unsigned int* indices, unsigned int indicesSize, unsigned int positionAttributeNumber, unsigned int positionDimensions, unsigned int colorAttributeNumber, unsigned int colorDimensions, unsigned int textureAttributeNumber, unsigned int textureDimensions);
+	VertexBuffer(Primitive& primitive, unsigned int positionAttributeNumber, unsigned int positionDimensions, unsigned int colorAttributeNumber, unsigned int colorDimensions, unsigned int textureAttributeNumber, unsigned int textureDimensions);
 	~VertexBuffer();
 
 	void bind();

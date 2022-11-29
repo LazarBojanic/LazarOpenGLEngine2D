@@ -5,12 +5,14 @@
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
 #include "Texture2D.hpp"
+#include "Primitive.hpp"
 
 class Mesh {
 private:
 	std::string name;
 	VertexArray* vertexArray;
 	VertexBuffer* vertexBuffer;
+	Primitive* primitive;
 	unsigned int textureChannel;
 	Texture2D* texture2D;
 	float* data;
@@ -18,10 +20,9 @@ private:
 	unsigned int vertexCount;
 public:
 	Mesh();
+	Mesh(Primitive& primitive, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions);
 	Mesh(float* data, unsigned int dataSize, unsigned int* indices, unsigned int indicesSize, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions, const Texture2D& texture2D, unsigned int textureChannel);
 	~Mesh();
-	/*float* copyFloatArray(float* source, unsigned int sourceSize);
-	unsigned int* copyUnsignedIntArray(unsigned int* source, unsigned int sourceSize);*/
 	std::string getName() {
 		return this->name;
 	}
@@ -30,6 +31,9 @@ public:
 	}
 	VertexBuffer* getVertexBuffer() {
 		return this->vertexBuffer;
+	}
+	Primitive* getPrimitive() {
+		return this->primitive;
 	}
 	unsigned int getTextureChannel() {
 		return this->textureChannel;

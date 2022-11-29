@@ -27,8 +27,24 @@ Mesh::Mesh(float* data, unsigned int dataSize, unsigned int* indices, unsigned i
 	this->texture2D->bind(this->textureChannel);
 	this->vertexArray->unbind();
 }
+Mesh::Mesh(Primitive& primitive, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions) {
+	this->name = name;
+	this->primitive = new Primitive(primitive);
+	this->vertexArray = new VertexArray();
+	this->vertexArray->bind();
+	this->vertexBuffer = new VertexBuffer(
+		primitive,
+		positionAttributeNumber,
+		positionDimensions,
+		colorAttributeNumber,
+		colorDimensions,
+		textureAttributeNumber,
+		textureDimensions);
+	this->vertexArray->unbind();
+}
 
 Mesh::~Mesh(){
+	delete this->primitive;
 	delete this->texture2D;
 	delete this->vertexArray;
 	delete this->vertexBuffer;

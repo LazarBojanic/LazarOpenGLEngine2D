@@ -27,19 +27,19 @@ Game* Game::getInstance() {
 }
 
 void Game::init() {
+	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f);
 	Shader* triangleShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleFragmentShader.glsl", "triangleShader");
 	Texture2D* triangleTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\textures\\awesomeface.png", true, "triangleTexture");
 	Triangle* triangle = new Triangle();
-	std::cout << sizeof(*triangle->getVertexPositionsAndColorsAndTextureCoordinates()) << std::endl;
-	Mesh* triangleMesh = new Mesh(
-		triangle->getVertexPositionsAndColorsAndTextureCoordinates(),
-		24 * sizeof(float)/*sizeof(triangle->getVertexPositionsAndColorsAndTextureCoordinates())*/,
+	/*Mesh* triangleMesh = new Mesh(
+		triangle->getData(),
+		24 * sizeof(float),
 		triangle->getIndices(),
-		3 * sizeof(unsigned int)/*sizeof(triangle->getIndices())*/,
+		3 * sizeof(unsigned int),
 		"triangleMesh",
 		0, 3, 1, 3, 2, 2, *triangleTexture, 0
-		);
-	std::cout << glGetError() << std::endl;
+		);*/
+	Mesh* triangleMesh = new Mesh(*triangle, "triangleMesh", 0, 3, 1, 3, 2, 2);
 	GameObject* triangleGameObject = new GameObject("triangleGameObject", *triangleMesh, *triangleShader, *triangleTexture);
 	GameObjectManager::getInstance()->addGameObject(*triangleGameObject);
 	
