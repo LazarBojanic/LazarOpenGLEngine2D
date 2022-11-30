@@ -3,7 +3,7 @@
 Game* Game::instance;
 
 Game::Game(unsigned int width, unsigned int height) {
-	this->gameState = GAME_ACTIVE;
+	this->gameState = SCREEN_SAVER;
 	this->width = width;
 	this->height = height;
 	this->keys = new bool[1024];
@@ -26,29 +26,6 @@ void Game::initKeys() {
 		this->keys[i] = false;
 	}
 }
-void Game::moveLogo(){
-
-	GameObject* quadGameObject = GameObjectManager::getInstance()->getGameObjectByName("quadGameObject");
-
-	float deltaX = this->logoX - (this->width / 2.0f);
-	float deltaY = this->logoY - (25.0f + (this->logoHeight / 2));
-
-	if (deltaX > 0) {
-		this->logoX--;
-	}
-	if (deltaX < 0) {
-		this->logoX++;
-	}
-	if (deltaY > 0) {
-		this->logoY--;
-	}
-	if (deltaY < 0) {
-		this->logoY++;
-	}
-
-	Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), 0);
-
-}
 Game* Game::getInstance() {
 	if (!instance) {
 		instance = new Game(0, 0);
@@ -57,33 +34,27 @@ Game* Game::getInstance() {
 }
 
 void Game::init() {
-	this->isLogoMove = false;
 	glm::mat4 projection = glm::ortho(0.0f, (float)this->width, 0.0f, (float)this->height, -1.0f, 1.0f);
-	Shader* triangleShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleFragmentShader.glsl", "triangleShader");
+	//Shader* triangleShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleFragmentShader.glsl", "triangleShader");
 	Shader* quadShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\quadVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\quadFragmentShader.glsl", "quadShader");
 	Texture2D* quadTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\textures\\dvdLogo.png", true, "quadTexture");
-	Triangle* triangle = new Triangle();
+	//Triangle* triangle = new Triangle();
 	Quad* quad = new Quad();
 	
-	quadShader->setVector4f("uDvdColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
-
 	
-	
-
-
-	
-	Mesh* triangleMesh = new Mesh(*triangle, "triangleMesh", 0, 3, 1, 3, 2, 2);
+	/*Mesh* triangleMesh = new Mesh(*triangle, "triangleMesh", 0, 3, 1, 3, 2, 2);
 	triangleShader->setMatrix4f("uProjection", projection, true);
 	GameObject* triangleGameObject = new GameObject("triangleGameObject", *triangleMesh, *triangleShader, *quadTexture);
-	GameObjectManager::getInstance()->addGameObject(*triangleGameObject);
-
+	GameObjectManager::getInstance()->addGameObject(*triangleGameObject);*/
 
 	Mesh* quadMesh = new Mesh(*quad, "quadMesh", 0, 3, 1, 3, 2, 2);
+	quadShader->setVector4f("uDvdColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
 	quadShader->setMatrix4f("uProjection", projection, true);
 	quadShader->setInt("uTexture", 0, true);
 	GameObject* quadGameObject = new GameObject("quadGameObject", *quadMesh, *quadShader, *quadTexture);
 	GameObjectManager::getInstance()->addGameObject(*quadGameObject);
 
+	this->isLogoMove = false;
 	this->logoWidth = 160.0f;
 	this->logoHeight = 120.0f;
 
@@ -102,53 +73,67 @@ void Game::processInput(float dt) {
 
 	}
 	if (this->keys[GLFW_KEY_SPACE]) {
-		this->isLogoMove = true;
+		this->gameState = TRANSITION_TO_ACTIVE;
 	}
 }
 
 void Game::update(float dt) {
 }
 
-static float rotation = 0;
-
 void Game::render(float dt) {
-	
-	//rotation = glm::pow(glfwGetTime(), 4);
-	Renderer::getInstance()->colorBackground(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-	if (this->isLogoMove) {
-		moveLogo();
-		return;
-	}
-
-	GameObject* triangleGameObject = GameObjectManager::getInstance()->getGameObjectByName("triangleGameObject");
 	GameObject* quadGameObject = GameObjectManager::getInstance()->getGameObjectByName("quadGameObject");
-	//Renderer::getInstance()->draw(*triangleGameObject, glm::vec2(this->width / 2, this->height / 2), glm::vec2(200.0f, 200.0f), rotation);
-
-	Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), rotation);
-
-	this->logoX += this->logoXSpeed;
-	this->logoY += this->logoYSpeed;
-
-	if (this->logoX + this->logoWidth / 2 >= this->width || this->logoX - this->logoWidth / 2 <= 0) {
-		srand(time(NULL));
-		int colorIndex = rand() % 8;
-		glm::vec4 dvdColor = this->colorsArray[colorIndex];
-
-		std::cout << "Red: " << dvdColor.x << " | " << "Green: " << dvdColor.y << " | " << "Blue: " << dvdColor.z << " | " << std::endl;
-
-		ResourceManager::getInstance()->getShaderByName("quadShader")->setVector4f("uDvdColor", dvdColor, true);
-		this->logoXSpeed = -this->logoXSpeed;
+	Shader* quadShader = ResourceManager::getInstance()->getShaderByName("quadShader");
+	Renderer::getInstance()->colorBackground(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	if (this->gameState == SCREEN_SAVER) {
+		this->logoX += this->logoXSpeed;
+		this->logoY += this->logoYSpeed;
+		if (this->logoX + this->logoWidth / 2 >= this->width || this->logoX - this->logoWidth / 2 <= 0) {
+			srand(time(NULL));
+			int colorIndex = rand() % 8;
+			glm::vec4 dvdColor = this->colorsArray[colorIndex];
+			quadShader->setVector4f("uDvdColor", dvdColor, true);
+			this->logoXSpeed = -this->logoXSpeed;
+		}
+		if (this->logoY + this->logoHeight / 2 >= this->height || this->logoY - this->logoHeight / 2 <= 0) {
+			srand(time(NULL));
+			int colorIndex = rand() % 8;
+			glm::vec4 dvdColor = this->colorsArray[colorIndex];
+			quadShader->setVector4f("uDvdColor", dvdColor, true);
+			this->logoYSpeed = -this->logoYSpeed;
+		}
+		Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), 0);
 	}
-	if (this->logoY + this->logoHeight / 2 >= this->height || this->logoY - this->logoHeight / 2 <= 0) {
-		srand(time(NULL));
-		int colorIndex = rand() % 8;
-		glm::vec4 dvdColor = this->colorsArray[colorIndex];
-
-		std::cout << "Red: " << dvdColor.x << " | " << "Green: " << dvdColor.y << " | " << "Blue: " << dvdColor.z << " | " << std::endl;
-
-		ResourceManager::getInstance()->getShaderByName("quadShader")->setVector4f("uDvdColor", dvdColor, true);
-		this->logoYSpeed = -this->logoYSpeed;
+	else if (this->gameState == TRANSITION_TO_ACTIVE) {
+		float destinationX = this->width / 2.0f;
+		float destinationY = 25.0f + (this->logoHeight / 2.0f);
+		float deltaX = this->logoX - destinationX;
+		float deltaY = this->logoY - destinationY;
+		if (deltaX > 0) {
+			this->logoX--;
+		}
+		if (deltaX < 0) {
+			this->logoX++;
+		}
+		if (deltaY > 0) {
+			this->logoY--;
+		}
+		if (deltaY < 0) {
+			this->logoY++;
+		}
+		Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), 0);
+		if (this->logoX == destinationX && this->logoY == destinationY) {
+			this->gameState == ACTIVE;
+		}
 	}
+	else if (this->gameState == ACTIVE) {
+
+	}
+	else if (this->gameState == WIN) {
+
+	}
+	else if (this->gameState == LOSS) {
+
+	}	
 }
 void Game::clear() {
 

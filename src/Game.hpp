@@ -9,9 +9,11 @@
 #include "Quad.hpp"
 
 enum GameState {
-    GAME_ACTIVE,
-    GAME_MENU,
-    GAME_WIN
+    SCREEN_SAVER,
+    TRANSITION_TO_ACTIVE,
+    ACTIVE,
+    WIN,
+    LOSS
 };
 
 
@@ -62,6 +64,5 @@ public:
         return this->height;
     }
     void initKeys();
-    void moveLogo();
 };
     
