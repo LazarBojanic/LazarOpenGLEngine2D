@@ -20,10 +20,11 @@ private:
     static Game* instance;
     GameState gameState;
     bool* keys;
+    int keysSize = 1024;
     unsigned int width, height;
 
     float logoWidth, logoHeight;
-    float x, y, xSpeed, ySpeed;
+    float logoX, logoY, logoXSpeed, logoYSpeed;
 
     glm::vec4* colorsArray = new glm::vec4[8]{
         glm::vec4(0.7f, 0.4f, 0.4f, 1.0f),
@@ -36,6 +37,7 @@ private:
         glm::vec4(0.75f, 0.0f, 0.75f, 1.0f)
     };
     int colorsArrayCount = 8;
+    bool isLogoMove;
     
 public:
     Game(unsigned int width, unsigned int height);
@@ -59,5 +61,7 @@ public:
     unsigned int getHeight() {
         return this->height;
     }
+    void initKeys();
+    void moveLogo();
 };
     
