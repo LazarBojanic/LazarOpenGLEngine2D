@@ -109,24 +109,27 @@ void Game::render(float dt) {
 		float deltaX = this->logoX - destinationX;
 		float deltaY = this->logoY - destinationY;
 		if (deltaX > 0) {
-			this->logoX--;
+			this->logoX -= 3;
 		}
 		if (deltaX < 0) {
-			this->logoX++;
+			this->logoX += 3;
 		}
 		if (deltaY > 0) {
-			this->logoY--;
+			this->logoY -= 3;
 		}
 		if (deltaY < 0) {
-			this->logoY++;
+			this->logoY += 3;
 		}
 		Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), 0);
-		if (this->logoX == destinationX && this->logoY == destinationY) {
-			this->gameState == ACTIVE;
+		//std::cout << "X: " << glm::abs(this->logoX - destinationX) << "Y: " << glm::abs(this->logoY - destinationY) << std::endl;
+		if (glm::abs(this->logoX - destinationX) <= 3.0f && glm::abs(this->logoY - destinationY) <= 3.0f) {
+			this->gameState = ACTIVE;
+			//std::cout << "ACTIVE!" << std::endl;
 		}
 	}
 	else if (this->gameState == ACTIVE) {
-
+		//std::cout << "X: " << glm::abs(this->logoX) << "Y: " << glm::abs(this->logoY) << std::endl;
+		Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), 0);
 	}
 	else if (this->gameState == WIN) {
 
