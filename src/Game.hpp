@@ -25,8 +25,16 @@ private:
     int keysSize = 1024;
     unsigned int width, height;
 
-    float logoWidth, logoHeight;
-    float logoX, logoY, logoXSpeed, logoYSpeed;
+    float dvdWidth, dvdHeight;
+    float dvdX, dvdY;
+    float dvdXSpeed, dvdYSpeed;
+
+    float dvdRotationWhileTransition;
+    float dvdScaleWhileTransition;
+
+    float bluRayWidth, bluRayHeight;
+    float bluRayX, bluRayY;
+    float bluRayXSpeed, bluRayYSpeed;
 
     glm::vec4* colorsArray = new glm::vec4[8]{
         glm::vec4(0.7f, 0.4f, 0.4f, 1.0f),
@@ -39,7 +47,6 @@ private:
         glm::vec4(0.75f, 0.0f, 0.75f, 1.0f)
     };
     int colorsArrayCount = 8;
-    bool isLogoMove;
     
 public:
     Game(unsigned int width, unsigned int height);
@@ -64,5 +71,6 @@ public:
         return this->height;
     }
     void initKeys();
+    void spawnEnemyLine(GameObject& gameObject, int numberOfEnemies);
 };
     

@@ -35,101 +35,148 @@ Game* Game::getInstance() {
 
 void Game::init() {
 	glm::mat4 projection = glm::ortho(0.0f, (float)this->width, 0.0f, (float)this->height, -1.0f, 1.0f);
-	//Shader* triangleShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleFragmentShader.glsl", "triangleShader");
-	Shader* quadShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\quadVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\quadFragmentShader.glsl", "quadShader");
-	Texture2D* quadTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\textures\\dvdLogo.png", true, "quadTexture");
-	//Triangle* triangle = new Triangle();
-	Quad* quad = new Quad();
+	Shader* dvdShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\dvdVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\dvdFragmentShader.glsl", "dvdShader");
+	Shader* projectileShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\projectileVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\projectileFragmentShader.glsl", "projectileShader");
+	Shader* bluRayShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\bluRayVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\bluRayFragmentShader.glsl", "bluRayShader");
+	Texture2D* dvdTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\textures\\dvdLogo.png", true, "dvdTexture");
+	Texture2D* bluRayTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\textures\\bluRayLogo.png", true, "bluRayTexture");
+	Quad* dvdQuad = new Quad();
+	Quad* projectileQuad = new Quad();
+	Quad* bluRayQuad = new Quad();
+	Mesh* dvdMesh = new Mesh(*dvdQuad, "dvdMesh", 0, 3, 1, 3, 2, 2);
+	Mesh* projectileMesh = new Mesh(*projectileQuad, "projectileMesh", 0, 3, 1, 3, 2, 2);
+	Mesh* bluRayMesh = new Mesh(*bluRayQuad, "bluRayMesh", 0, 3, 1, 3, 2, 2);
+	dvdShader->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
+	dvdShader->setMatrix4f("uProjection", projection, true);
+	dvdShader->setInt("uTexture", 0, true);
+
+	bluRayShader->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
+	bluRayShader->setMatrix4f("uProjection", projection, true);
+	bluRayShader->setInt("uTexture", 0, true);
+
+	projectileShader->setMatrix4f("uProjection", projection, true);
+
+	GameObject* dvdGameObject = new GameObject("dvdGameObject", *dvdMesh, *bluRayShader, *dvdTexture);
+	GameObject* projectileGameObject = new GameObject("projectileGameObject", *projectileMesh, *projectileShader, *dvdTexture);
+	GameObject* bluRayGameObject = new GameObject("bluRayGameObject", *bluRayMesh, *bluRayShader, *bluRayTexture);
 	
-	
-	/*Mesh* triangleMesh = new Mesh(*triangle, "triangleMesh", 0, 3, 1, 3, 2, 2);
-	triangleShader->setMatrix4f("uProjection", projection, true);
-	GameObject* triangleGameObject = new GameObject("triangleGameObject", *triangleMesh, *triangleShader, *quadTexture);
-	GameObjectManager::getInstance()->addGameObject(*triangleGameObject);*/
+	GameObjectManager::getInstance()->addGameObject(*dvdGameObject);
+	GameObjectManager::getInstance()->addGameObject(*projectileGameObject);
+	GameObjectManager::getInstance()->addGameObject(*bluRayGameObject);
 
-	Mesh* quadMesh = new Mesh(*quad, "quadMesh", 0, 3, 1, 3, 2, 2);
-	quadShader->setVector4f("uDvdColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
-	quadShader->setMatrix4f("uProjection", projection, true);
-	quadShader->setInt("uTexture", 0, true);
-	GameObject* quadGameObject = new GameObject("quadGameObject", *quadMesh, *quadShader, *quadTexture);
-	GameObjectManager::getInstance()->addGameObject(*quadGameObject);
+	this->dvdWidth = 160.0f;
+	this->dvdHeight = 120.0f;
 
-	this->isLogoMove = false;
-	this->logoWidth = 160.0f;
-	this->logoHeight = 120.0f;
+	this->dvdX = 400.0f;
+	this->dvdY = 450.0f;
+	this->dvdXSpeed = 3.0f;
+	this->dvdYSpeed = 3.0f;
 
-	this->logoX = 400.0f;
-	this->logoY = 450.0f;
-	this->logoXSpeed = 3.0f;
-	this->logoYSpeed = 3.0f;
+	this->dvdRotationWhileTransition = 0.0f;
+	this->dvdScaleWhileTransition = 1.0f;
+
+	this->bluRayWidth = 40.0f;
+	this->bluRayHeight = 30.0f;
+	this->bluRayX = this->bluRayWidth;
+	this->bluRayY = this->height - this->bluRayHeight;
+	this->bluRayXSpeed = 3.0f;
+	this->bluRayYSpeed = 3.0f;
 }
 
 
 void Game::processInput(float dt) {
-	if (this->keys[GLFW_KEY_UP]) {
-
+	if (this->gameState == ACTIVE) {
+		if (this->keys[GLFW_KEY_LEFT]) {
+			this->dvdX -= 10.0f;
+		}
+		if (this->keys[GLFW_KEY_RIGHT]) {
+			this->dvdX += 10.0f;
+		}
 	}
-	if (this->keys[GLFW_KEY_DOWN]) {
-
-	}
-	if (this->keys[GLFW_KEY_SPACE]) {
-		this->gameState = TRANSITION_TO_ACTIVE;
+	if (this->gameState == SCREEN_SAVER) {
+		if (this->keys[GLFW_KEY_SPACE]) {
+			this->gameState = TRANSITION_TO_ACTIVE;
+		}
 	}
 }
-
 void Game::update(float dt) {
+}
+void Game::spawnEnemyLine(GameObject& gameObject, int numberOfEnemies) {
+	float currentEnemyX = this->bluRayX;
+	float currentEnemyY = this->bluRayY;
+
+	for (int i = 0; i < numberOfEnemies; i++) {
+		gameObject.getShader()->setVector4f("uColor", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f), true);
+		Renderer::getInstance()->draw(gameObject, glm::vec2(currentEnemyX, currentEnemyY), glm::vec2(this->bluRayWidth, this->bluRayHeight), 0);
+		currentEnemyX += (this->bluRayWidth * 1.5f);
+	}
 }
 
 void Game::render(float dt) {
-	GameObject* quadGameObject = GameObjectManager::getInstance()->getGameObjectByName("quadGameObject");
-	Shader* quadShader = ResourceManager::getInstance()->getShaderByName("quadShader");
-	Renderer::getInstance()->colorBackground(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
+	GameObject* projectileGameObject = GameObjectManager::getInstance()->getGameObjectByName("projectileGameObject");
+	GameObject* bluRayGameObject = GameObjectManager::getInstance()->getGameObjectByName("bluRayGameObject");
+	Renderer::getInstance()->colorBackground(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	if (this->gameState == SCREEN_SAVER) {
-		this->logoX += this->logoXSpeed;
-		this->logoY += this->logoYSpeed;
-		if (this->logoX + this->logoWidth / 2 >= this->width || this->logoX - this->logoWidth / 2 <= 0) {
+		this->dvdX += this->dvdXSpeed;
+		this->dvdY += this->dvdYSpeed;
+		if (this->dvdX + this->dvdWidth / 2 >= this->width || this->dvdX - this->dvdWidth / 2 <= 0) {
 			srand(time(NULL));
 			int colorIndex = rand() % 8;
 			glm::vec4 dvdColor = this->colorsArray[colorIndex];
-			quadShader->setVector4f("uDvdColor", dvdColor, true);
-			this->logoXSpeed = -this->logoXSpeed;
+			dvdGameObject->getShader()->setVector4f("uColor", dvdColor, true);
+			this->dvdXSpeed = -this->dvdXSpeed;
 		}
-		if (this->logoY + this->logoHeight / 2 >= this->height || this->logoY - this->logoHeight / 2 <= 0) {
+		if (this->dvdY + this->dvdHeight / 2 >= this->height || this->dvdY - this->dvdHeight / 2 <= 0) {
 			srand(time(NULL));
 			int colorIndex = rand() % 8;
 			glm::vec4 dvdColor = this->colorsArray[colorIndex];
-			quadShader->setVector4f("uDvdColor", dvdColor, true);
-			this->logoYSpeed = -this->logoYSpeed;
+			dvdGameObject->getShader()->setVector4f("uColor", dvdColor, true);
+			this->dvdYSpeed = -this->dvdYSpeed;
 		}
-		Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), 0);
+		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth, this->dvdHeight), 0);
 	}
 	else if (this->gameState == TRANSITION_TO_ACTIVE) {
+		this->dvdRotationWhileTransition += 10.0f;
+		if (this->dvdScaleWhileTransition > 0.4f) {
+			this->dvdScaleWhileTransition -= 0.005f;
+		}
 		float destinationX = this->width / 2.0f;
-		float destinationY = 25.0f + (this->logoHeight / 2.0f);
-		float deltaX = this->logoX - destinationX;
-		float deltaY = this->logoY - destinationY;
+		float destinationY = 25.0f + ((this->dvdHeight * this->dvdScaleWhileTransition) / 2.0f);
+		float deltaX = this->dvdX - destinationX;
+		float deltaY = this->dvdY - destinationY;
 		if (deltaX > 0) {
-			this->logoX -= 3;
+			this->dvdX -= 3;
 		}
 		if (deltaX < 0) {
-			this->logoX += 3;
+			this->dvdX += 3;
 		}
 		if (deltaY > 0) {
-			this->logoY -= 3;
+			this->dvdY -= 3;
 		}
 		if (deltaY < 0) {
-			this->logoY += 3;
+			this->dvdY += 3;
 		}
-		Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), 0);
-		//std::cout << "X: " << glm::abs(this->logoX - destinationX) << "Y: " << glm::abs(this->logoY - destinationY) << std::endl;
-		if (glm::abs(this->logoX - destinationX) <= 3.0f && glm::abs(this->logoY - destinationY) <= 3.0f) {
+		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth * this->dvdScaleWhileTransition, this->dvdHeight * this->dvdScaleWhileTransition), this->dvdRotationWhileTransition);
+		if (glm::abs(this->dvdX - destinationX) <= 3.0f && glm::abs(this->dvdY - destinationY) <= 3.0f) {
 			this->gameState = ACTIVE;
-			//std::cout << "ACTIVE!" << std::endl;
+			this->dvdWidth *= this->dvdScaleWhileTransition;
+			this->dvdHeight *= this->dvdScaleWhileTransition;
 		}
 	}
 	else if (this->gameState == ACTIVE) {
-		//std::cout << "X: " << glm::abs(this->logoX) << "Y: " << glm::abs(this->logoY) << std::endl;
-		Renderer::getInstance()->draw(*quadGameObject, glm::vec2(this->logoX, this->logoY), glm::vec2(this->logoWidth, this->logoHeight), 0);
+		srand(time(NULL));
+		int numberOfEnemies = rand() % 8 + 2;
+
+
+		spawnEnemyLine(*bluRayGameObject, numberOfEnemies);
+
+
+		dvdGameObject->getShader()->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
+		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth, this->dvdHeight), 0);
+		
+		//Renderer::getInstance()->draw(*projectileGameObject, glm::vec2(this->logoX, this->logoY + 30.0f), glm::vec2(30.0f, 30.0f), 0);
+
 	}
 	else if (this->gameState == WIN) {
 

@@ -22,15 +22,10 @@ void Renderer::draw(GameObject& gameObject, glm::vec2 position, glm::vec2 size, 
     modelView = glm::translate(modelView, glm::vec3(position, 0.0f));
     modelView = glm::rotate(modelView, glm::radians(rotationRadians), glm::vec3(0.0f, 0.0f, 1.0f));
     modelView = glm::scale(modelView, glm::vec3(size, 1.0f));
-
-    Texture2D* quadTexture = ResourceManager::getInstance()->getTexture2DByName("quadTexture");
-
     
     gameObject.getMesh()->getVertexArray()->bind();
-    quadTexture->bind(0);
+    gameObject.getTexture2D()->bind(0);
     gameObject.getShader()->setMatrix4f("uModelView", modelView, true);
-    
-    //gameObject.getShader()->use();
     glDrawElements(GL_TRIANGLES, gameObject.getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
     gameObject.getMesh()->getVertexArray()->unbind();
 }

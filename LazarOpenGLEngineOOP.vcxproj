@@ -457,8 +457,12 @@
     <ClInclude Include="src\VertexBuffer.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\quadFragmentShader.glsl" />
-    <None Include="assets\shaders\quadVertexShader.glsl" />
+    <None Include="assets\shaders\bluRayFragmentShader.glsl" />
+    <None Include="assets\shaders\bluRayVertexShader.glsl" />
+    <None Include="assets\shaders\dvdFragmentShader.glsl" />
+    <None Include="assets\shaders\dvdVertexShader.glsl" />
+    <None Include="assets\shaders\projectileFragmentShader.glsl" />
+    <None Include="assets\shaders\projectileVertexShader.glsl" />
     <None Include="assets\shaders\triangleFragmentShader.glsl" />
     <None Include="assets\shaders\triangleVertexShader.glsl" />
     <None Include="libraries\include\glm\detail\func_common.inl" />
@@ -618,6 +622,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\textures\awesomeface.png" />
+    <Image Include="assets\textures\bluRayLogo.png" />
     <Image Include="assets\textures\dvdLogo.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
