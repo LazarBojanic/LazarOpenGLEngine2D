@@ -69,11 +69,15 @@ void Game::init() {
 
 	this->dvdX = 400.0f;
 	this->dvdY = 450.0f;
-	this->dvdXSpeed = 3.0f;
-	this->dvdYSpeed = 3.0f;
+	this->dvdXSpeed = 300.0f;
+	this->dvdYSpeed = 300.0f;
+	this->dvdGameSpeed = 400.0f;
 
 	this->dvdRotationWhileTransition = 0.0f;
+	this->dvdRotationWhileTransitionSpeed = 300.0f;
 	this->dvdScaleWhileTransition = 1.0f;
+	this->destinationScale = 0.4f;
+	this->deltaScale = 1.0f;
 
 	this->bluRayWidth = 40.0f;
 	this->bluRayHeight = 30.0f;
@@ -81,21 +85,32 @@ void Game::init() {
 	this->bluRayY = this->height - this->bluRayHeight;
 	this->bluRayXSpeed = 3.0f;
 	this->bluRayYSpeed = 3.0f;
+
+	this->dvdDestinationX = this->width / 2.0f;
+	this->dvdDestinationY = 25.0f + ((this->dvdHeight * this->destinationScale) / 2.0f);
+	this->dvdTransitionSpeed = 200.0f;
 }
 
 
 void Game::processInput(float dt) {
 	if (this->gameState == ACTIVE) {
 		if (this->keys[GLFW_KEY_LEFT]) {
-			this->dvdX -= 10.0f;
+			this->dvdX -= this->dvdGameSpeed * dt;
 		}
 		if (this->keys[GLFW_KEY_RIGHT]) {
-			this->dvdX += 10.0f;
+			this->dvdX += this->dvdGameSpeed * dt;
+		}
+		if (this->keys[GLFW_KEY_SPACE]) {
+			//shootLaser();
 		}
 	}
 	if (this->gameState == SCREEN_SAVER) {
-		if (this->keys[GLFW_KEY_SPACE]) {
+		if (this->keys[GLFW_KEY_B]) {
 			this->gameState = TRANSITION_TO_ACTIVE;
+			this->deltaX = this->dvdDestinationX - this->dvdX;
+			this->deltaY = this->dvdDestinationY - this->dvdY;
+			this->deltaVector = glm::sqrt(glm::pow(this->deltaX, 2.0f) + glm::pow(this->deltaY, 2.0f));
+			this->deltaScale = 1 - this->destinationScale;
 		}
 	}
 }
@@ -118,8 +133,8 @@ void Game::render(float dt) {
 	GameObject* bluRayGameObject = GameObjectManager::getInstance()->getGameObjectByName("bluRayGameObject");
 	Renderer::getInstance()->colorBackground(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	if (this->gameState == SCREEN_SAVER) {
-		this->dvdX += this->dvdXSpeed;
-		this->dvdY += this->dvdYSpeed;
+		this->dvdX += this->dvdXSpeed * dt;
+		this->dvdY += this->dvdYSpeed * dt;
 		if (this->dvdX + this->dvdWidth / 2 >= this->width || this->dvdX - this->dvdWidth / 2 <= 0) {
 			srand(time(NULL));
 			int colorIndex = rand() % 8;
@@ -137,31 +152,23 @@ void Game::render(float dt) {
 		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth, this->dvdHeight), 0);
 	}
 	else if (this->gameState == TRANSITION_TO_ACTIVE) {
-		this->dvdRotationWhileTransition += 10.0f;
-		if (this->dvdScaleWhileTransition > 0.4f) {
+		this->dvdRotationWhileTransition += this->dvdRotationWhileTransitionSpeed * dt;
+		/*if (this->dvdScaleWhileTransition > 0.4f) {
 			this->dvdScaleWhileTransition -= 0.005f;
-		}
-		float destinationX = this->width / 2.0f;
-		float destinationY = 25.0f + ((this->dvdHeight * this->dvdScaleWhileTransition) / 2.0f);
-		float deltaX = this->dvdX - destinationX;
-		float deltaY = this->dvdY - destinationY;
-		if (deltaX > 0) {
-			this->dvdX -= 3;
-		}
-		if (deltaX < 0) {
-			this->dvdX += 3;
-		}
-		if (deltaY > 0) {
-			this->dvdY -= 3;
-		}
-		if (deltaY < 0) {
-			this->dvdY += 3;
-		}
+		}*/
+		this->dvdScaleWhileTransition -= ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaScale) * dt;
+
+		this->dvdX += ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaX) * dt;
+
+		this->dvdY += ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaY) * dt;
+
+		
+		
 		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth * this->dvdScaleWhileTransition, this->dvdHeight * this->dvdScaleWhileTransition), this->dvdRotationWhileTransition);
-		if (glm::abs(this->dvdX - destinationX) <= 3.0f && glm::abs(this->dvdY - destinationY) <= 3.0f) {
+		if (glm::abs(this->dvdX - this->dvdDestinationX) <= 3.0f && glm::abs(this->dvdY - this->dvdDestinationY) <= 3.0f) {
 			this->gameState = ACTIVE;
-			this->dvdWidth *= this->dvdScaleWhileTransition;
-			this->dvdHeight *= this->dvdScaleWhileTransition;
+			this->dvdWidth *= this->destinationScale;
+			this->dvdHeight *= this->destinationScale;
 		}
 	}
 	else if (this->gameState == ACTIVE) {
@@ -171,7 +178,7 @@ void Game::render(float dt) {
 
 		spawnEnemyLine(*bluRayGameObject, numberOfEnemies);
 
-
+		std::cout << this->dvdHeight << " : " << this->destinationScale << std::endl;
 		dvdGameObject->getShader()->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
 		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth, this->dvdHeight), 0);
 		

@@ -28,13 +28,25 @@ private:
     float dvdWidth, dvdHeight;
     float dvdX, dvdY;
     float dvdXSpeed, dvdYSpeed;
+    float dvdGameSpeed;
 
     float dvdRotationWhileTransition;
+    float dvdRotationWhileTransitionSpeed;
     float dvdScaleWhileTransition;
+    float destinationScale;
+    float deltaScale;
 
     float bluRayWidth, bluRayHeight;
     float bluRayX, bluRayY;
     float bluRayXSpeed, bluRayYSpeed;
+
+    float deltaX;
+    float deltaY;
+    float deltaVector;
+
+    float dvdDestinationX;
+    float dvdDestinationY;
+    float dvdTransitionSpeed;
 
     glm::vec4* colorsArray = new glm::vec4[8]{
         glm::vec4(0.7f, 0.4f, 0.4f, 1.0f),
