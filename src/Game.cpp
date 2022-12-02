@@ -11,8 +11,9 @@ Game::Game(unsigned int width, unsigned int height) {
 }
 
 Game::~Game() {
-	delete this->keys;
-	delete this->colorsArray;
+	delete[] this->keys;
+	delete[] this->colorsArray;
+	delete[] this->enemyPositions;
 }
 
 Game* Game::getInstance(unsigned int width, unsigned int height) {
@@ -79,8 +80,8 @@ void Game::init() {
 	this->destinationScale = 0.4f;
 	this->deltaScale = 1.0f;
 
-	this->bluRayWidth = 40.0f;
-	this->bluRayHeight = 30.0f;
+	this->bluRayWidth = 76.0f;
+	this->bluRayHeight = 57.0f;
 	this->bluRayX = this->bluRayWidth;
 	this->bluRayY = this->height - this->bluRayHeight;
 	this->bluRayXSpeed = 3.0f;
@@ -89,6 +90,10 @@ void Game::init() {
 	this->dvdDestinationX = this->width / 2.0f;
 	this->dvdDestinationY = 25.0f + ((this->dvdHeight * this->destinationScale) / 2.0f);
 	this->dvdTransitionSpeed = 200.0f;
+
+	this->numberOfLines = 3;
+	this->numberOfEnemiesPerLine = 6;
+	this->enemyPositions = new std::vector<glm::vec2>();
 }
 
 
@@ -116,14 +121,17 @@ void Game::processInput(float dt) {
 }
 void Game::update(float dt) {
 }
-void Game::spawnEnemyLine(GameObject& gameObject, int numberOfEnemies) {
+void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
 	float currentEnemyX = this->bluRayX;
 	float currentEnemyY = this->bluRayY;
-
-	for (int i = 0; i < numberOfEnemies; i++) {
-		gameObject.getShader()->setVector4f("uColor", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f), true);
-		Renderer::getInstance()->draw(gameObject, glm::vec2(currentEnemyX, currentEnemyY), glm::vec2(this->bluRayWidth, this->bluRayHeight), 0);
-		currentEnemyX += (this->bluRayWidth * 1.5f);
+	for (int i = 0; i < numberOfLines; i++) {
+		for (int j = 0; j < numberOfEnemiesPerLine; j++) {
+			
+			this->enemyPositions->push_back(glm::vec2(currentEnemyX, currentEnemyY));
+			currentEnemyX += (this->bluRayWidth * 1.5f);
+		}
+		currentEnemyX = this->bluRayX;
+		currentEnemyY -= (this->bluRayHeight * 1.5f);
 	}
 }
 
@@ -166,16 +174,17 @@ void Game::render(float dt) {
 			this->gameState = ACTIVE;
 			this->dvdWidth *= this->destinationScale;
 			this->dvdHeight *= this->destinationScale;
+			spawnEnemies(this->numberOfLines, this->numberOfEnemiesPerLine);
 		}
 	}
 	else if (this->gameState == ACTIVE) {
-		srand(time(NULL));
-		int numberOfEnemies = rand() % 8 + 2;
-		spawnEnemyLine(*bluRayGameObject, numberOfEnemies);
+		for (int i = 0; i < this->enemyPositions->size(); i++) {
+			bluRayGameObject->getShader()->setVector4f("uColor", glm::vec4(0.125f, 0.4f, 0.95f, 1.0f), true);
+			Renderer::getInstance()->draw(*bluRayGameObject, glm::vec2(this->enemyPositions->at(i).x, this->enemyPositions->at(i).y), glm::vec2(this->bluRayWidth, this->bluRayHeight), 0);
+			
+		}
 		dvdGameObject->getShader()->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
 		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth, this->dvdHeight), 0);
-		//Renderer::getInstance()->draw(*projectileGameObject, glm::vec2(this->logoX, this->logoY + 30.0f), glm::vec2(30.0f, 30.0f), 0);
-
 	}
 	else if (this->gameState == WIN) {
 

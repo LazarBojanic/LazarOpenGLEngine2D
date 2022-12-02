@@ -48,6 +48,10 @@ private:
     float dvdDestinationY;
     float dvdTransitionSpeed;
 
+    int numberOfLines;
+    int numberOfEnemiesPerLine;
+    std::vector<glm::vec2>* enemyPositions;
+
     glm::vec4* colorsArray = new glm::vec4[8]{
         glm::vec4(0.7f, 0.4f, 0.4f, 1.0f),
         glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
@@ -83,7 +87,7 @@ public:
         return this->height;
     }
     void initKeys();
-    void spawnEnemyLine(GameObject& gameObject, int numberOfEnemies);
+    void spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine);
     void updateWindowSize(int width, int height);
 };
     

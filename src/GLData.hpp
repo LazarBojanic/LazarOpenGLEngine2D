@@ -37,4 +37,11 @@ public:
 		}
 		return result;
 	}
+	static std::string listToString(std::vector<glm::vec2>* list) {
+		std::string result = "";
+		for (int i = 0; i < list->size(); i++) {
+			result += "Enemy X:" + std::to_string(list->at(i).x) + "Enemy Y:" + std::to_string(list->at(i).y) + "\n";
+		}
+		return result;
+	}
 };

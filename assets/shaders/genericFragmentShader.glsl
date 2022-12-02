@@ -29,5 +29,5 @@ void main(){
 	texcol.y = z;
 	texcol.z = z;
 	
-	fragColor = vec4(col*texcol,1.0);
+	fragColor = vec4(col*texcol,0.2);
 }
