@@ -84,5 +84,6 @@ public:
     }
     void initKeys();
     void spawnEnemyLine(GameObject& gameObject, int numberOfEnemies);
+    void updateWindowSize(int width, int height);
 };
     

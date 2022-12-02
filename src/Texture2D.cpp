@@ -6,8 +6,7 @@ Texture2D::Texture2D() {
 }
 
 Texture2D::Texture2D(std::string textureFilePath, bool alpha, std::string name) {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     this->name = name;
     this->wrap_S = GL_REPEAT;
     this->wrap_T = GL_REPEAT;

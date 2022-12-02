@@ -23,6 +23,7 @@ void Application::initGlad() {
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+    Game::getInstance()->updateWindowSize(width, height);
 }
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -50,6 +51,9 @@ void Application::initWindow() {
     glfwSetKeyCallback(this->window, key_callback);
     glfwSetFramebufferSizeCallback(this->window, framebuffer_size_callback);
     glfwSwapInterval(1);
+    glfwSetWindowPos(this->window, 1080, 720);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Application::run() {
