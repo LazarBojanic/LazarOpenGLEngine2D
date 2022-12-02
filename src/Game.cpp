@@ -98,7 +98,6 @@ void Game::processInput(float dt) {
 			this->dvdX -= this->dvdGameSpeed * dt;
 		}
 		if (this->keys[GLFW_KEY_RIGHT]) {
-			std::cout << dt << std::endl;
 			this->dvdX += this->dvdGameSpeed * dt;
 		}
 		if (this->keys[GLFW_KEY_SPACE]) {
@@ -184,7 +183,7 @@ void Game::render(float dt) {
 	else if (this->gameState == LOSS) {
 
 	}
-	std::cout << "Width : " << width << " Height: " << height << std::endl;
+	//std::cout << "Width : " << width << " Height: " << height << std::endl;
 }
 void Game::clear() {
 
