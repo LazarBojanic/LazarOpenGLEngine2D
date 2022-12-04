@@ -14,4 +14,6 @@ public:
 	void initGlad();
 	void initWindow();
 	void run();
+
+
 };

@@ -1,14 +1,12 @@
 #include "Application.hpp"
 
-
 Application::Application(unsigned int width, unsigned int height) {
     this->width = width;
     this->height = height;
     initWindow();
-    Game::getInstance(this->width, this->height)->init();
+    Game::getInstance(this->window, this->width, this->height)->init();
 }
 Application::~Application() {
-
 }
 
 void Application::initGlfw() {
@@ -64,10 +62,10 @@ void Application::run() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         
-        Game::getInstance(this->width, this->height)->processInput(deltaTime);
+        Game::getInstance()->processInput(deltaTime);
 
-        Game::getInstance(this->width, this->height)->update(deltaTime);
-        Game::getInstance(this->width, this->height)->render(deltaTime);
+        Game::getInstance()->update(deltaTime);
+        Game::getInstance()->render(deltaTime);
 
         glfwPollEvents();
         glfwSwapBuffers(this->window);

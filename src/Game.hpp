@@ -20,6 +20,8 @@ enum GameState {
 
 class Game {
 private:
+    GLFWwindow* window;
+    std::string windowTitle;
     static Game* instance;
     GameState gameState;
     bool* keys;
@@ -59,24 +61,19 @@ private:
     float laserSpeedY;
     bool laserIsShooting;
 
-    glm::vec4* colorsArray = new glm::vec4[8]{
-        glm::vec4(0.7f, 0.4f, 0.4f, 1.0f),
-        glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-        glm::vec4(0.4f, 0.4f, 0.7f, 1.0f),
-        glm::vec4(1.0f, 1.0f, 0.0f, 1.0f),
-        glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
-        glm::vec4(0.0f, 1.0f, 1.0f, 1.0f),
-        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-        glm::vec4(0.75f, 0.0f, 0.75f, 1.0f)
-    };
+    int score;
+
+    glm::vec4* colorsArray;
     int colorsArrayCount = 8;
     
 public:
-    Game(unsigned int width, unsigned int height);
+    Game(GLFWwindow* window, unsigned int width, unsigned int height);
     ~Game();
-    static Game* getInstance(unsigned int width, unsigned int height);
+    static Game* getInstance(GLFWwindow* window, unsigned int width, unsigned int height);
     static Game* getInstance();
     void init();
+    void initResources();
+    void initVariables();
     void processInput(float dt);
     void update(float dt);
     void render(float dt);
