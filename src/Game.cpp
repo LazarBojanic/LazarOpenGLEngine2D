@@ -120,7 +120,7 @@ void Game::initVariables() {
 	this->dvdTransitionSpeed = 200.0f;
 
 	this->numberOfLines = 1;
-	this->numberOfEnemiesPerLine = 3;
+	this->numberOfEnemiesPerLine = 4;
 	this->enemyPositions = new std::vector<glm::vec2>();
 	this->enemies = new std::vector<Entity*>();
 
@@ -181,12 +181,7 @@ void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine){
 		currentEnemyY -= (this->bluRayHeight * 1.5f);
 	}
 }
-bool Game::checkCollision(glm::vec2 positionOne, glm::vec2 sizeOne, glm::vec2 positionTwo, glm::vec2 sizeTwo) {
-	bool collisionX = positionOne.x + sizeOne.x >= positionTwo.x && positionTwo.x + sizeTwo.x >= positionOne.x;
-	bool collisionY = positionOne.y + sizeOne.y >= positionTwo.y && positionTwo.y + sizeTwo.y >= positionOne.y;
-	return collisionX && collisionY;
-}
-bool Game::checkCollisionForEntity(Entity& entity, glm::vec2 positionTwo, glm::vec2 sizeTwo) {
+bool Game::checkCollision(Entity& entity, glm::vec2 positionTwo, glm::vec2 sizeTwo) {
 	bool collisionX = entity.position.x + entity.size.x >= positionTwo.x && positionTwo.x + sizeTwo.x >= entity.position.x;
 	bool collisionY = entity.position.y + entity.size.y >= positionTwo.y && positionTwo.y + sizeTwo.y >= entity.position.y;
 	return collisionX && collisionY;
@@ -248,7 +243,7 @@ void Game::render(float dt) {
 			this->laserIsShooting = false;
 		}
 		for (int i = 0; i < this->enemies->size(); i++) {
-			if (checkCollisionForEntity(*this->enemies->at(i),
+			if (checkCollision(*this->enemies->at(i),
 				glm::vec2(this->laserX, this->laserY),
 				glm::vec2(this->laserWidth, this->laserHeight))) {
 				std::cout << "Collision detected with " << this->enemies->at(i)->name << std::endl;
@@ -274,9 +269,6 @@ void Game::render(float dt) {
 			this->deltaVector = glm::sqrt(glm::pow(this->deltaX, 2.0f) + glm::pow(this->deltaY, 2.0f));
 			this->destinationScale = 1.0f;
 			this->deltaScale = this->dvdScaleWhileTransition - this->destinationScale;
-
-
-
 		}
 	}
 	else if (this->gameState == WIN) {

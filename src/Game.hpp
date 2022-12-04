@@ -94,7 +94,6 @@ public:
     void spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine);
     void updateEnemies(GameObject& gameObject);
     void updateWindowSize(int width, int height);
-    bool checkCollision(glm::vec2 positionOne, glm::vec2 sizeOne, glm::vec2 positionTwo, glm::vec2 sizeTwo);
-    bool checkCollisionForEntity(Entity& entity, glm::vec2 positionTwo, glm::vec2 sizeTwo);
+    bool checkCollision(Entity& entity, glm::vec2 positionTwo, glm::vec2 sizeTwo);
 };
     
