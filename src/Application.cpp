@@ -51,7 +51,7 @@ void Application::initWindow() {
     glfwSetKeyCallback(this->window, key_callback);
     glfwSetFramebufferSizeCallback(this->window, framebuffer_size_callback);
     glfwSwapInterval(1);
-    glfwSetWindowPos(this->window, 1080, 720);
+    glfwSetWindowPos(this->window, 400, 200);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

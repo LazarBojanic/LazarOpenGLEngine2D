@@ -51,17 +51,3 @@ Mesh::~Mesh(){
 	delete[] this->data;
 	delete[] this->indices;
 }
-/*float* Mesh::copyFloatArray(float* source, unsigned int sourceSize) {
-	float* result = new float[sourceSize];
-	for (int i = 0; i < sourceSize; i++) {
-		result[i] = source[i];
-	}
-	return result;
-}
-unsigned int* Mesh::copyUnsignedIntArray(unsigned int* source, unsigned int sourceSize) {
-	unsigned int* result = new unsigned int[sourceSize];
-	for (int i = 0; i < sourceSize; i++) {
-		result[i] = source[i];
-	}
-	return result;
-}*/

@@ -23,11 +23,6 @@ Shader* ResourceManager::addShader(std::string vertexShaderPath, std::string fra
     if (std::find(this->shaderList->begin(), this->shaderList->end(), shader) == this->shaderList->end()) {
         this->shaderList->push_back(shader);
     }
-    /*for (int i = 0; i < this->shaderList->size(); i++) {
-        if (this->shaderList->at(i)->getName() != name) {
-            this->shaderList->push_back(shader);
-        }
-    }*/
     return shader;
 }
 
@@ -36,11 +31,6 @@ Texture2D* ResourceManager::addTexture2D(std::string texture2DPath, bool alpha, 
     if (std::find(this->texture2DList->begin(), this->texture2DList->end(), texture2D) == this->texture2DList->end()) {
         this->texture2DList->push_back(texture2D);
     }
-    /*for (int i = 0; i < this->texture2DList->size() + 1; i++) {
-        if (this->texture2DList->at(i)->getName() != name) {
-            this->texture2DList->push_back(texture2D);
-        }
-    }*/
     return texture2D;
 }
 
@@ -50,7 +40,6 @@ Shader* ResourceManager::getShaderByName(std::string name){
             return this->shaderList->at(i);
         }
     }
-    
 }
 Texture2D* ResourceManager::getTexture2DByName(std::string name) {
     for (int i = 0; i < this->texture2DList->size(); i++) {
