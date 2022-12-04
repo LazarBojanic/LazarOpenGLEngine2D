@@ -82,6 +82,7 @@ void Game::initResources() {
 	GameObjectManager::getInstance()->addGameObject(*laserGameObject);
 }
 void Game::initVariables() {
+	glfwSetWindowTitle(this->window, "DVD Game");
 	this->colorsArray = new glm::vec4[8]{
 		glm::vec4(0.7f, 0.4f, 0.4f, 1.0f),
 		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
@@ -152,23 +153,11 @@ void Game::processInput(float dt) {
 			this->deltaX = this->dvdDestinationX - this->dvdX;
 			this->deltaY = this->dvdDestinationY - this->dvdY;
 			this->deltaVector = glm::sqrt(glm::pow(this->deltaX, 2.0f) + glm::pow(this->deltaY, 2.0f));
-			this->deltaScale = 1 - this->destinationScale;
+			this->deltaScale = 1.0f - this->destinationScale;
 		}
 	}
 }
 void Game::update(float dt) {
-}
-void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
-	float currentEnemyX = this->bluRayX;
-	float currentEnemyY = this->bluRayY;
-	for (int i = 0; i < numberOfLines; i++) {
-		for (int j = 0; j < numberOfEnemiesPerLine; j++) {
-			this->enemyPositions->push_back(glm::vec2(currentEnemyX, currentEnemyY));
-			currentEnemyX += (this->bluRayWidth * 2.2f);
-		}
-		currentEnemyX = this->bluRayX;
-		currentEnemyY -= (this->bluRayHeight * 1.5f);
-	}
 }
 void Game::updateEnemies(GameObject& bluRayGameObject) {
 	for (int i = 0; i < this->enemies->size(); i++) {
@@ -178,7 +167,7 @@ void Game::updateEnemies(GameObject& bluRayGameObject) {
 		}
 	}
 }
-void Game::spawnEnemyEntities(int numberOfLines, int numberOfEnemiesPerLine){
+void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine){
 	float currentEnemyX = this->bluRayX;
 	float currentEnemyY = this->bluRayY;
 	for (int i = 0; i < numberOfLines; i++) {
@@ -242,17 +231,10 @@ void Game::render(float dt) {
 			this->dvdHeight *= this->destinationScale;
 			this->laserX = this->dvdX;
 			this->laserY = this->dvdY + this->dvdHeight;
-			spawnEnemyEntities(this->numberOfLines, this->numberOfEnemiesPerLine);
-			/*for (int i = 0; i < this->enemies->size(); i++) {
-				std::cout << this->enemies->at(i)->name << std::endl;
-			}*/
+			spawnEnemies(this->numberOfLines, this->numberOfEnemiesPerLine);
 		}
 	}
 	else if (this->gameState == ACTIVE) {
-		/*for (int i = 0; i < this->enemyPositions->size(); i++) {
-			bluRayGameObject->getShader()->setVector4f("uColor", glm::vec4(0.125f, 0.4f, 0.95f, 1.0f), true);
-			Renderer::getInstance()->draw(*bluRayGameObject, glm::vec2(this->enemyPositions->at(i).x, this->enemyPositions->at(i).y), glm::vec2(this->bluRayWidth, this->bluRayHeight), 0);
-		}*/
 		updateEnemies(*bluRayGameObject);
 		dvdGameObject->getShader()->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
 		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth, this->dvdHeight), 0);
@@ -265,17 +247,6 @@ void Game::render(float dt) {
 			this->laserY = this->dvdY + this->dvdHeight;
 			this->laserIsShooting = false;
 		}
-		/*for (int i = 0; i < this->enemyPositions->size(); i++) {
-			if (checkCollision(glm::vec2(this->enemyPositions->at(i).x, this->enemyPositions->at(i).y),
-				glm::vec2(this->bluRayWidth, this->bluRayHeight),
-				glm::vec2(this->laserX, this->laserY),
-				glm::vec2(this->laserWidth, this->laserHeight))) {
-				std::cout << "Collision Detected!" << std::endl;
-				this->laserX = this->dvdX;
-				this->laserY = this->dvdY + this->dvdHeight;
-				this->laserIsShooting = false;
-			}
-		}*/
 		for (int i = 0; i < this->enemies->size(); i++) {
 			if (checkCollisionForEntity(*this->enemies->at(i),
 				glm::vec2(this->laserX, this->laserY),
@@ -294,22 +265,38 @@ void Game::render(float dt) {
 		}
 		if (this->score == this->enemies->size()) {
 			this->gameState = WIN;
+			this->windowTitle = "WIN";
+			glfwSetWindowTitle(this->window, this->windowTitle.c_str());
+			this->dvdDestinationX = (this->width / 2 + 50.0f);
+			this->dvdDestinationY = (this->height / 2 + 50.0f);
+			this->deltaX = this->dvdDestinationX - this->dvdX;
+			this->deltaY = this->dvdDestinationY - this->dvdY;
+			this->deltaVector = glm::sqrt(glm::pow(this->deltaX, 2.0f) + glm::pow(this->deltaY, 2.0f));
+			this->destinationScale = 1.0f;
+			this->deltaScale = this->dvdScaleWhileTransition - this->destinationScale;
+
+
+
 		}
 	}
 	else if (this->gameState == WIN) {
-		this->windowTitle = "WIN";
-		initVariables();
-		std::cout << this->dvdX << " : " << this->dvdY << std::endl;
-		glfwSetWindowTitle(this->window, this->windowTitle.c_str());
-		//Sleep(3000);
-		this->gameState = SCREEN_SAVER;
+		this->dvdRotationWhileTransition += this->dvdRotationWhileTransitionSpeed * dt;
+		this->dvdScaleWhileTransition -= ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaScale) * dt;
+		this->dvdX += ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaX) * dt;
+		this->dvdY += ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaY) * dt;
+		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth * this->dvdScaleWhileTransition, this->dvdHeight * this->dvdScaleWhileTransition), this->dvdRotationWhileTransition);
+		if (glm::abs(this->dvdX - this->dvdDestinationX) <= 3.0f && glm::abs(this->dvdY - this->dvdDestinationY) <= 3.0f) {
+			this->gameState = SCREEN_SAVER;
+			this->dvdWidth *= this->destinationScale;
+			this->dvdHeight *= this->destinationScale;
+			initVariables();
+		}
 	}
 	else if (this->gameState == LOSS) {
 		this->windowTitle = "GAME OVER";
 		initVariables();
 		std::cout << this->dvdX << " : " << this->dvdY << std::endl;
 		glfwSetWindowTitle(this->window, this->windowTitle.c_str());
-		//Sleep(3000);
 		this->gameState = SCREEN_SAVER;
 	}
 }

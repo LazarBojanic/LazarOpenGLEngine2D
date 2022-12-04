@@ -38,7 +38,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 void Application::initWindow() {
     initGlfw();
-    this->window = glfwCreateWindow(this->width, this->height, "LazarOpenGLGame", NULL, NULL);
+    this->window = glfwCreateWindow(this->width, this->height, "DVD Game", NULL, NULL);
     if (this->window == NULL) {
         std::cout << "Failed to create GLFW window." << std::endl;
         glfwTerminate();
