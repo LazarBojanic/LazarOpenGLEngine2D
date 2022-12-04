@@ -13,6 +13,7 @@ Game::~Game() {
 	delete[] this->keys;
 	delete[] this->colorsArray;
 	delete[] this->enemyPositions;
+	delete[] this->enemies;
 }
 
 Game* Game::getInstance(unsigned int width, unsigned int height) {
@@ -104,6 +105,7 @@ void Game::init() {
 	this->numberOfLines = 3;
 	this->numberOfEnemiesPerLine = 6;
 	this->enemyPositions = new std::vector<glm::vec2>();
+	this->enemies = new std::vector<Entity*>();
 
 	this->laserX = this->dvdX;
 	this->laserY = this->dvdY + this->dvdHeight;
@@ -143,8 +145,29 @@ void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
 	float currentEnemyY = this->bluRayY;
 	for (int i = 0; i < numberOfLines; i++) {
 		for (int j = 0; j < numberOfEnemiesPerLine; j++) {
-			
 			this->enemyPositions->push_back(glm::vec2(currentEnemyX, currentEnemyY));
+			currentEnemyX += (this->bluRayWidth * 2.2f);
+		}
+		currentEnemyX = this->bluRayX;
+		currentEnemyY -= (this->bluRayHeight * 1.5f);
+	}
+}
+void Game::updateEnemies(GameObject& bluRayGameObject) {
+	for (int i = 0; i < this->enemies->size(); i++) {
+		if (!this->enemies->at(i)->isHit) {
+			bluRayGameObject.getShader()->setVector4f("uColor", glm::vec4(0.125f, 0.4f, 0.95f, 1.0f), true);
+			Renderer::getInstance()->draw(bluRayGameObject, glm::vec2(this->enemies->at(i)->position.x, this->enemies->at(i)->position.y), glm::vec2(this->enemies->at(i)->size.x, this->enemies->at(i)->size.y), this->enemies->at(i)->rotation);
+		}
+	}
+}
+void Game::spawnEnemyEntities(int numberOfLines, int numberOfEnemiesPerLine){
+	float currentEnemyX = this->bluRayX;
+	float currentEnemyY = this->bluRayY;
+	for (int i = 0; i < numberOfLines; i++) {
+		for (int j = 0; j < numberOfEnemiesPerLine; j++) {
+			Entity* entity = new Entity("enemy" + std::to_string(i * numberOfEnemiesPerLine + j), glm::vec2(currentEnemyX, currentEnemyY), 
+				glm::vec2(this->bluRayWidth, this->bluRayHeight), 0, false);
+			this->enemies->push_back(entity);
 			currentEnemyX += (this->bluRayWidth * 2.2f);
 		}
 		currentEnemyX = this->bluRayX;
@@ -154,6 +177,11 @@ void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
 bool Game::checkCollision(glm::vec2 positionOne, glm::vec2 sizeOne, glm::vec2 positionTwo, glm::vec2 sizeTwo) {
 	bool collisionX = positionOne.x + sizeOne.x >= positionTwo.x && positionTwo.x + sizeTwo.x >= positionOne.x;
 	bool collisionY = positionOne.y + sizeOne.y >= positionTwo.y && positionTwo.y + sizeTwo.y >= positionOne.y;
+	return collisionX && collisionY;
+}
+bool Game::checkCollisionForEntity(Entity& entity, glm::vec2 positionTwo, glm::vec2 sizeTwo) {
+	bool collisionX = entity.position.x + entity.size.x >= positionTwo.x && positionTwo.x + sizeTwo.x >= entity.position.x;
+	bool collisionY = entity.position.y + entity.size.y >= positionTwo.y && positionTwo.y + sizeTwo.y >= entity.position.y;
 	return collisionX && collisionY;
 }
 void Game::render(float dt) {
@@ -196,14 +224,18 @@ void Game::render(float dt) {
 			this->dvdHeight *= this->destinationScale;
 			this->laserX = this->dvdX;
 			this->laserY = this->dvdY + this->dvdHeight;
-			spawnEnemies(this->numberOfLines, this->numberOfEnemiesPerLine);
+			spawnEnemyEntities(this->numberOfLines, this->numberOfEnemiesPerLine);
+			/*for (int i = 0; i < this->enemies->size(); i++) {
+				std::cout << this->enemies->at(i)->name << std::endl;
+			}*/
 		}
 	}
 	else if (this->gameState == ACTIVE) {
-		for (int i = 0; i < this->enemyPositions->size(); i++) {
+		/*for (int i = 0; i < this->enemyPositions->size(); i++) {
 			bluRayGameObject->getShader()->setVector4f("uColor", glm::vec4(0.125f, 0.4f, 0.95f, 1.0f), true);
 			Renderer::getInstance()->draw(*bluRayGameObject, glm::vec2(this->enemyPositions->at(i).x, this->enemyPositions->at(i).y), glm::vec2(this->bluRayWidth, this->bluRayHeight), 0);
-		}
+		}*/
+		updateEnemies(*bluRayGameObject);
 		dvdGameObject->getShader()->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
 		Renderer::getInstance()->draw(*dvdGameObject, glm::vec2(this->dvdX, this->dvdY), glm::vec2(this->dvdWidth, this->dvdHeight), 0);
 		if (this->laserIsShooting) {
@@ -215,14 +247,7 @@ void Game::render(float dt) {
 			this->laserY = this->dvdY + this->dvdHeight;
 			this->laserIsShooting = false;
 		}
-		for (int i = 0; i < this->enemyPositions->size(); i++) {
-			/*float laserDeltaXLeft = glm::abs(this->enemyPositions->at(i).x - (this->bluRayWidth / 2) - this->laserX);
-			float laserDeltaXRight = glm::abs(this->enemyPositions->at(i).x + (this->bluRayWidth / 2) - this->laserX);
-			float laserDeltaYBottom = glm::abs(this->enemyPositions->at(i).y - (this->bluRayHeight / 2) - this->laserY);
-			if (laserDeltaYBottom <= 10.0f && laserDelta) {
-				std::cout << "Collision Detected" << std::endl;
-				this->laserIsShooting = false;
-			}*/
+		/*for (int i = 0; i < this->enemyPositions->size(); i++) {
 			if (checkCollision(glm::vec2(this->enemyPositions->at(i).x, this->enemyPositions->at(i).y),
 				glm::vec2(this->bluRayWidth, this->bluRayHeight),
 				glm::vec2(this->laserX, this->laserY),
@@ -232,8 +257,21 @@ void Game::render(float dt) {
 				this->laserY = this->dvdY + this->dvdHeight;
 				this->laserIsShooting = false;
 			}
+		}*/
+		for (int i = 0; i < this->enemies->size(); i++) {
+			if (checkCollisionForEntity(*this->enemies->at(i),
+				glm::vec2(this->laserX, this->laserY),
+				glm::vec2(this->laserWidth, this->laserHeight))) {
+				std::cout << "Collision detected with " << this->enemies->at(i)->name << std::endl;
+				this->enemies->at(i)->isHit = true;
+				this->enemies->at(i)->position.x = this->dvdX;
+				this->enemies->at(i)->position.y = this->dvdY;
+				this->laserX = this->dvdX;
+				this->laserY = this->dvdY + this->dvdHeight;
+				this->laserIsShooting = false;
+			}
+			
 		}
-
 	}
 	else if (this->gameState == WIN) {
 
