@@ -128,7 +128,7 @@ void Game::initVariables() {
 	this->laserY = this->dvdY + this->dvdHeight;
 	this->laserWidth = 20.0f;
 	this->laserHeight = 15.0f;
-	this->laserSpeedY = 200.0f;
+	this->laserSpeedY = 350.0f;
 	this->laserIsShooting = false;
 
 	this->score = 0;
