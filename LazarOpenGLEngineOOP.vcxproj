@@ -563,6 +563,7 @@
     <None Include="assets\shaders\backgroundVertexShader.glsl" />
     <None Include="assets\shaders\bluRayFragmentShader.glsl" />
     <None Include="assets\shaders\bluRayVertexShader.glsl" />
+    <None Include="assets\shaders\dvdBurnFragmentShader.glsl" />
     <None Include="assets\shaders\dvdFragmentShader.glsl" />
     <None Include="assets\shaders\dvdVertexShader.glsl" />
     <None Include="assets\shaders\fireFragmentShader.glsl" />

@@ -12,3 +12,7 @@ GameObject::~GameObject() {
 	delete this->shader;
 	delete this->texture2D;
 }
+
+void GameObject::setShader(const Shader& shader){
+	this->shader = new Shader(shader);
+}

@@ -26,4 +26,5 @@ public:
 	Texture2D* getTexture2D() {
 		return this->texture2D;
 	}
+	void setShader(const Shader& shader);
 };
