@@ -1,7 +1,14 @@
 #include "Mesh.hpp"
 
-Mesh::Mesh( ) {
-
+Mesh::Mesh() {
+	this->data = nullptr;
+	this->indices = nullptr;
+	this->vertexCount = 0;
+	this->name = "";
+	this->textureChannel = 0;
+	this->texture2D = nullptr;
+	this->vertexArray = nullptr;
+	this->vertexBuffer = nullptr;
 }
 
 Mesh::Mesh(float* data, unsigned int dataSize, unsigned int* indices, unsigned int indicesSize, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions, const Texture2D& texture2D, unsigned int textureChannel){

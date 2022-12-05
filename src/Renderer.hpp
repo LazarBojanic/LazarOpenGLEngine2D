@@ -12,7 +12,7 @@ private:
 
 public:
 	static Renderer* getInstance();
-	void draw(GameObject& gameObject, glm::vec2 position, glm::vec2 size, float rotationRadians);
-	void drawUntextured(GameObject& gameObject, glm::vec2 position, glm::vec2 size, float rotationRadians);
+	void draw(GameObject& gameObject, bool scaled);
+	void drawUntextured(GameObject& gameObject, bool scaled);
 	void colorBackground(glm::vec4 color);
 };

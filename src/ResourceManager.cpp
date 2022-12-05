@@ -3,10 +3,12 @@
 ResourceManager* ResourceManager::instance;
 
 ResourceManager::ResourceManager() {
+    this->meshList = new std::vector<Mesh*>();
     this->shaderList = new std::vector<Shader*>();
     this->texture2DList = new std::vector<Texture2D*>();
 }
 ResourceManager::~ResourceManager() {
+    delete this->meshList;
     delete this->shaderList;
     delete this->texture2DList;
 }
@@ -17,9 +19,16 @@ ResourceManager* ResourceManager::getInstance() {
     return instance;
 }
 
+Mesh* ResourceManager::addMesh(Primitive& primitive, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions){
+    Mesh* mesh = new Mesh(primitive, name, positionAttributeNumber, positionDimensions, colorAttributeNumber, colorDimensions, textureAttributeNumber, textureDimensions);
+    if (std::find(this->meshList->begin(), this->meshList->end(), mesh) == this->meshList->end()) {
+        this->meshList->push_back(mesh);
+    }
+    return mesh;
+}
+
 Shader* ResourceManager::addShader(std::string vertexShaderPath, std::string fragmentShaderPath, std::string name){
     Shader* shader = new Shader(vertexShaderPath, fragmentShaderPath, name);
-    //std::vector<Shader*> tempList = *this->shaderList;
     if (std::find(this->shaderList->begin(), this->shaderList->end(), shader) == this->shaderList->end()) {
         this->shaderList->push_back(shader);
     }
@@ -32,6 +41,14 @@ Texture2D* ResourceManager::addTexture2D(std::string texture2DPath, bool alpha, 
         this->texture2DList->push_back(texture2D);
     }
     return texture2D;
+}
+
+Mesh* ResourceManager::getMeshByName(std::string name){
+    for (int i = 0; i < this->meshList->size(); i++) {
+        if (this->meshList->at(i)->getName() == name) {
+            return this->meshList->at(i);
+        }
+    }
 }
 
 Shader* ResourceManager::getShaderByName(std::string name){

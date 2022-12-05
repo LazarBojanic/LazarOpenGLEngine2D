@@ -252,7 +252,7 @@
     <ClInclude Include="libraries\include\freetype\tttables.h" />
     <ClInclude Include="libraries\include\freetype\tttags.h" />
     <ClInclude Include="libraries\include\ft2build.h" />
-    <ClInclude Include="src\Entity.hpp" />
+    <ClInclude Include="src\DrawData.hpp" />
     <ClInclude Include="src\GameObject.hpp" />
     <ClInclude Include="src\IndexBuffer.hpp" />
     <ClInclude Include="src\Mesh.hpp" />
@@ -567,6 +567,7 @@
     <None Include="assets\shaders\dvdFragmentShader.glsl" />
     <None Include="assets\shaders\dvdVertexShader.glsl" />
     <None Include="assets\shaders\fireFragmentShader.glsl" />
+    <None Include="assets\shaders\gpuTestShader.glsl" />
     <None Include="assets\shaders\laserFragmentShader.glsl" />
     <None Include="assets\shaders\laserVertexShader.glsl" />
     <None Include="assets\shaders\triangleFragmentShader.glsl" />
@@ -710,7 +711,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\DrawData.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
