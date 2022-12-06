@@ -53,7 +53,7 @@ void Game::initVariables() {
 
 	this->dvdTransitionSpeed = 200.0f;
 	this->dvdDestinationX = this->width / 2.0f;
-	this->dvdDestinationY = 100.0f;
+	this->dvdDestinationY = 50.0f;
 	
 
 	this->dvdRotationWhileTransition = 0.0f;
@@ -107,7 +107,7 @@ void Game::initResources() {
 
 	GameObjectManager::getInstance()->addGameObject("dvdGameObject", *dvdMesh, *dvdShader, *dvdTexture, this->width / 2 + 50.0f, this->height / 2 + 50.0f, 160.0f, 120.0f, 1.0f, 0.0f, 200.0f, 200.0f, false);
 	GameObjectManager::getInstance()->addGameObject("backgroundGameObject", *backgroundMesh, *backgroundShader, *dvdTexture, this->width / 2, this->height / 2, this->width, this->height, 1.0f, 0.0f, 0.0f, 0.0f, false);
-	GameObjectManager::getInstance()->addGameObject("laserGameObject", *laserMesh, *laserShader, *laserTexture, this->width / 2, 100.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 350.0f, false);
+	GameObjectManager::getInstance()->addGameObject("laserGameObject", *laserMesh, *laserShader, *laserTexture, this->width / 2, 100.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
 	GameObjectManager::getInstance()->addGameObject("bluRayGameObject", *bluRayMesh, *bluRayShader, *bluRayTexture, 60.0f, this->height - 45.0f, 80.0f, 60.0f, 1.0f, 0.0f, 0.0f, 0.0f, false);
 
 
@@ -119,6 +119,7 @@ void Game::init() {
 void Game::processInput(float dt) {
 	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
 	GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
+	
 	if (this->gameState == ACTIVE) {
 		if (this->keys[GLFW_KEY_LEFT] || this->keys[GLFW_KEY_A]) {
 			dvdGameObject->setPositionX(dvdGameObject->getPositionX() - dvdGameObject->getSpeedX() * dt);
@@ -127,8 +128,9 @@ void Game::processInput(float dt) {
 			dvdGameObject->setPositionX(dvdGameObject->getPositionX() + dvdGameObject->getSpeedX() * dt);
 		}
 		if (this->keys[GLFW_KEY_SPACE]) {
+			std::cout << dvdGameObject->getSizeY() << std::endl;
 			laserGameObject->setPositionX(dvdGameObject->getPositionX());
-			laserGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getSizeY());
+			laserGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getScaledSizeY());
 			this->laserIsShooting = true;
 		}
 		if (this->keys[GLFW_KEY_F]) {
@@ -162,14 +164,14 @@ void Game::render(float dt) {
 		std::cout << "Entered Screen Saver" << std::endl;
 		dvdGameObject->setPositionX(dvdGameObject->getPositionX() + dvdGameObject->getSpeedX() * dt);
 		dvdGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getSpeedY() * dt);
-		if (dvdGameObject->getPositionX() + dvdGameObject->getSizeX() / 2 >= this->width - 4.0f || dvdGameObject->getPositionX() - dvdGameObject->getSizeX() / 2 <= 4.0f) {
+		if (dvdGameObject->getPositionX() + dvdGameObject->getScaledSizeX() / 2 >= this->width - 4.0f || dvdGameObject->getPositionX() - dvdGameObject->getScaledSizeX() / 2 <= 4.0f) {
 			srand(time(NULL));
 			int colorIndex = rand() % 8;
 			glm::vec4 dvdColor = this->colorsArray[colorIndex];
 			dvdGameObject->getDrawData()->getShader()->setVector4f("uColor", dvdColor, true);
 			dvdGameObject->setSpeedX(-dvdGameObject->getSpeedX());
 		}
-		if (dvdGameObject->getPositionY() + dvdGameObject->getSizeY() / 2 >= this->height - 4.0f || dvdGameObject->getPositionY() - dvdGameObject->getSizeY() / 2  <= 4.0f) {
+		if (dvdGameObject->getPositionY() + dvdGameObject->getScaledSizeX() / 2 >= this->height - 4.0f || dvdGameObject->getPositionY() - dvdGameObject->getScaledSizeX() / 2  <= 4.0f) {
 			srand(time(NULL));
 			int colorIndex = rand() % 8;
 			glm::vec4 dvdColor = this->colorsArray[colorIndex];
@@ -212,7 +214,7 @@ void Game::render(float dt) {
 		for (int i = 0; i < this->enemies->size(); i++) {
 			if (checkCollision(*this->enemies->at(i),
 				glm::vec2(laserGameObject->getPositionX(), laserGameObject->getPositionY()),
-				glm::vec2(laserGameObject->getSizeX(), laserGameObject->getSizeY()))) {
+				glm::vec2(laserGameObject->getScaledSizeX(), laserGameObject->getScaledSizeX()))) {
 				std::cout << "Collision detected with " << this->enemies->at(i)->getName() << std::endl;
 				this->enemies->at(i)->setIsHit(true);
 				this->enemies->at(i)->setPositionX(dvdGameObject->getPositionX());
@@ -221,7 +223,7 @@ void Game::render(float dt) {
 				this->windowTitle = "Score: " + std::to_string(this->score);
 				glfwSetWindowTitle(this->window, this->windowTitle.c_str());
 				laserGameObject->setPositionX(dvdGameObject->getPositionX());
-				laserGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getSizeY());
+				laserGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getScaledSizeX());
 				this->laserIsShooting = false;
 			}
 		}
