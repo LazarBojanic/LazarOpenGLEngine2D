@@ -70,6 +70,8 @@ void Application::run() {
         glfwPollEvents();
         glfwSwapBuffers(this->window);
     }
-    //ResourceManager::getInstance()->clear();
+    ResourceManager::getInstance()->clear();
+    GameObjectManager::getInstance()->clear();
+    Game::getInstance()->clear();
     glfwTerminate();
 }

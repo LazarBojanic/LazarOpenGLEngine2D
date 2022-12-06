@@ -109,8 +109,6 @@ void Game::initResources() {
 	GameObjectManager::getInstance()->addGameObject("backgroundGameObject", *backgroundMesh, *backgroundShader, *dvdTexture, this->width / 2, this->height / 2, this->width, this->height, 1.0f, 0.0f, 0.0f, 0.0f, false);
 	GameObjectManager::getInstance()->addGameObject("laserGameObject", *laserMesh, *laserShader, *laserTexture, this->width / 2, 100.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
 	GameObjectManager::getInstance()->addGameObject("bluRayGameObject", *bluRayMesh, *bluRayShader, *bluRayTexture, 60.0f, this->height - 45.0f, 80.0f, 60.0f, 1.0f, 0.0f, 0.0f, 0.0f, false);
-
-
 }
 void Game::init() {
 	initVariables();
@@ -128,7 +126,6 @@ void Game::processInput(float dt) {
 			dvdGameObject->setPositionX(dvdGameObject->getPositionX() + dvdGameObject->getSpeedX() * dt);
 		}
 		if (this->keys[GLFW_KEY_SPACE]) {
-			std::cout << dvdGameObject->getSizeY() << std::endl;
 			laserGameObject->setPositionX(dvdGameObject->getPositionX());
 			laserGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getScaledSizeY());
 			this->laserIsShooting = true;
@@ -161,7 +158,6 @@ void Game::render(float dt) {
 	Renderer::getInstance()->colorBackground(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 	Renderer::getInstance()->drawUntextured(*backgroundGameObject, true);
 	if (this->gameState == SCREEN_SAVER) {
-		std::cout << "Entered Screen Saver" << std::endl;
 		dvdGameObject->setPositionX(dvdGameObject->getPositionX() + dvdGameObject->getSpeedX() * dt);
 		dvdGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getSpeedY() * dt);
 		if (dvdGameObject->getPositionX() + dvdGameObject->getScaledSizeX() / 2 >= this->width - 4.0f || dvdGameObject->getPositionX() - dvdGameObject->getScaledSizeX() / 2 <= 4.0f) {
@@ -181,7 +177,6 @@ void Game::render(float dt) {
 		Renderer::getInstance()->draw(*dvdGameObject, true);
 	}
 	else if (this->gameState == TRANSITION_TO_ACTIVE) {
-		std::cout << "Entered Transition To Active" << std::endl;
 		dvdGameObject->setRotation(dvdGameObject->getRotation() + this->dvdRotationWhileTransitionSpeed * dt);
 		dvdGameObject->setScale(dvdGameObject->getScale() - ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaScale) * dt);
 		dvdGameObject->setPositionX(dvdGameObject->getPositionX() + ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaX) * dt);
@@ -199,7 +194,6 @@ void Game::render(float dt) {
 		}
 	}
 	else if (this->gameState == ACTIVE) {
-		std::cout << "Entered Active" << std::endl;
 		updateEnemies();
 		Renderer::getInstance()->draw(*dvdGameObject, true);
 		if (this->laserIsShooting) {
@@ -215,7 +209,6 @@ void Game::render(float dt) {
 			if (checkCollision(*this->enemies->at(i),
 				glm::vec2(laserGameObject->getPositionX(), laserGameObject->getPositionY()),
 				glm::vec2(laserGameObject->getScaledSizeX(), laserGameObject->getScaledSizeX()))) {
-				std::cout << "Collision detected with " << this->enemies->at(i)->getName() << std::endl;
 				this->enemies->at(i)->setIsHit(true);
 				this->enemies->at(i)->setPositionX(dvdGameObject->getPositionX());
 				this->enemies->at(i)->setPositionY(dvdGameObject->getPositionY());
@@ -242,7 +235,6 @@ void Game::render(float dt) {
 		}
 	}
 	else if (this->gameState == WIN) {
-		std::cout << "Entered Win" << std::endl;
 		dvdGameObject->setRotation(dvdGameObject->getRotation() + this->dvdRotationWhileTransitionSpeed * dt);
 		dvdGameObject->setScale(dvdGameObject->getScale() - ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaScale) * dt);
 		dvdGameObject->setPositionX(dvdGameObject->getPositionX() + ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaX) * dt);
@@ -256,7 +248,6 @@ void Game::render(float dt) {
 		}
 	}
 	else if (this->gameState == LOSS) {
-		std::cout << "Entered Loss" << std::endl;
 		this->windowTitle = "GAME OVER";
 		initVariables();
 		glfwSetWindowTitle(this->window, this->windowTitle.c_str());
@@ -264,7 +255,9 @@ void Game::render(float dt) {
 	}
 }
 void Game::clear() {
-
+	delete[] this->keys;
+	delete[] this->colorsArray;
+	delete this->enemies;
 }
 void Game::updateEnemies() {
 	for (int i = 0; i < this->enemies->size(); i++) {

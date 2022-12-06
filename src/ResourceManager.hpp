@@ -33,4 +33,5 @@ public:
 	std::vector<Texture2D*>* getTexture2DList() {
 		return this->texture2DList;
 	}
+	void clear();
 };

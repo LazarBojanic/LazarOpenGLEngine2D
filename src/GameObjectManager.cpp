@@ -32,3 +32,6 @@ GameObject* GameObjectManager::getGameObjectByName(std::string name) {
         }
     }
 }
+void GameObjectManager::clear() {
+    delete this->gameObjectList;
+}

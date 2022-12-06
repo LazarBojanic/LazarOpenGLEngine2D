@@ -65,3 +65,8 @@ Texture2D* ResourceManager::getTexture2DByName(std::string name) {
         }
     }
 }
+void ResourceManager::clear() {
+    delete this->meshList;
+    delete this->shaderList;
+    delete this->texture2DList;
+}

@@ -17,7 +17,6 @@ uniform sampler2D texture;
 vec2 uv = vTextureCoords;
 
 float circle(vec2 uv, vec2 center, float radius){
-  //The main idea behind circle is to compute the distance between the fragment coordinate and the center of the circle. If it is beyond the radius then the fragment is outisde the circleSmooth
   float distFromCenter = distance(center, uv);
   return 1.0 - step(radius, distFromCenter);
 }
@@ -26,8 +25,6 @@ float circleSmooth(vec2 uv, vec2 center, float radius, float smoothness){
   float distFromCenter = distance(center, uv);
   return 1.0 - smoothstep(radius - smoothness * 0.5, radius + smoothness * 0.5, distFromCenter);
 }
-
-
 
 void main(){
   float circ = circle(uv, vec2(0.5), 0.35);
