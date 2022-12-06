@@ -26,6 +26,7 @@ private:
     bool* keys;
     int keysSize = 1024;
     unsigned int width, height;
+    double startTime;
 
     float dvdDestinationX;
     float dvdDestinationY;
@@ -44,6 +45,7 @@ private:
     int numberOfLines;
     int numberOfEnemiesPerLine;
     std::vector<GameObject*>* enemies;
+    int* randomEnemyProjectileSpawnTime;
 
     bool laserIsShooting;
 
@@ -80,6 +82,8 @@ public:
     void spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine);
     void updateEnemies();
     void updateWindowSize(int width, int height);
-    bool checkCollision(GameObject& gameObject, glm::vec2 positionTwo, glm::vec2 sizeTwo);
+    void checkCollisions();
+    void updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, float dt);
+    void spawnEnemyProjectiles();
 };
     

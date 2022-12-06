@@ -9,6 +9,7 @@ Game::Game(GLFWwindow* window, unsigned int width, unsigned int height) {
 	this->height = height;
 	this->keys = new bool[1024];
 	initKeys();
+	this->startTime = glfwGetTime();
 }
 Game::~Game() {
 	delete[] this->keys;
@@ -65,6 +66,9 @@ void Game::initVariables() {
 	this->numberOfLines = 1;
 	this->numberOfEnemiesPerLine = 4;
 	this->enemies = new std::vector<GameObject*>();
+	this->randomEnemyProjectileSpawnTime = new int[6] {
+		4, 5, 6, 7, 8, 9
+	};
 
 	this->laserIsShooting = false;
 
@@ -85,6 +89,7 @@ void Game::initResources() {
 	Shader* bluRayShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\bluRayVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\bluRayFragmentShader.glsl", "bluRayShader");
 	Shader* laserShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\laserVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\laserFragmentShader.glsl", "laserShader");
 	
+
 	dvdShader->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
 	dvdShader->setMatrix4f("uProjection", projection, true);
 	dvdShader->setInt("uTexture", 0, true);
@@ -105,9 +110,11 @@ void Game::initResources() {
 	Texture2D* bluRayTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\textures\\bluRayLogo.png", true, "bluRayTexture");
 	Texture2D* laserTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\textures\\laser.png", true, "laserTexture");
 
+	ResourceManager::getInstance()->addDrawData("bluRayDrawData", *bluRayMesh, *bluRayShader, *bluRayTexture);
+
+	GameObjectManager::getInstance()->addGameObject("laserGameObject", *laserMesh, *laserShader, *laserTexture, 9999.0f, 9999.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
 	GameObjectManager::getInstance()->addGameObject("dvdGameObject", *dvdMesh, *dvdShader, *dvdTexture, this->width / 2 + 50.0f, this->height / 2 + 50.0f, 160.0f, 120.0f, 1.0f, 0.0f, 200.0f, 200.0f, false);
 	GameObjectManager::getInstance()->addGameObject("backgroundGameObject", *backgroundMesh, *backgroundShader, *dvdTexture, this->width / 2, this->height / 2, this->width, this->height, 1.0f, 0.0f, 0.0f, 0.0f, false);
-	GameObjectManager::getInstance()->addGameObject("laserGameObject", *laserMesh, *laserShader, *laserTexture, this->width / 2, 100.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
 	GameObjectManager::getInstance()->addGameObject("bluRayGameObject", *bluRayMesh, *bluRayShader, *bluRayTexture, 60.0f, this->height - 45.0f, 80.0f, 60.0f, 1.0f, 0.0f, 0.0f, 0.0f, false);
 }
 void Game::init() {
@@ -126,8 +133,6 @@ void Game::processInput(float dt) {
 			dvdGameObject->setPositionX(dvdGameObject->getPositionX() + dvdGameObject->getSpeedX() * dt);
 		}
 		if (this->keys[GLFW_KEY_SPACE]) {
-			laserGameObject->setPositionX(dvdGameObject->getPositionX());
-			laserGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getScaledSizeY());
 			this->laserIsShooting = true;
 		}
 		if (this->keys[GLFW_KEY_F]) {
@@ -143,9 +148,43 @@ void Game::processInput(float dt) {
 			this->deltaVector = glm::sqrt(glm::pow(this->deltaX, 2.0f) + glm::pow(this->deltaY, 2.0f));
 			this->deltaScale = 1.0f - this->destinationScale;
 		}
+		if (this->keys[GLFW_KEY_R]) {
+			dvdGameObject->setPositionX(this->width / 2 + 50.0f);
+			dvdGameObject->setPositionY(this->height / 2 + 50.0f);
+		}
 	}
 }
 void Game::update(float dt) {
+}
+void Game::updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, float dt) {
+	/*GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
+	GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
+	if (laserGameObject == nullptr) {
+		DrawData* laserDrawData = ResourceManager::getInstance()->getDrawDataByName("laserDrawData");
+		laserGameObject = GameObjectManager::getInstance()->addGameObject("laserGameObject", *laserDrawData, dvdGameObject->getPositionX(), dvdGameObject->getPositionY() + dvdGameObject->getSizeY(),
+			20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
+	}
+	if (this->laserIsShooting) {
+		laserGameObject->setPositionY(laserGameObject->getPositionY() + laserGameObject->getSpeedY() * dt);
+		Renderer::getInstance()->draw(*laserGameObject, true);
+		if (laserGameObject->getPositionX() >= this->width || laserGameObject->getPositionX() <= 0 ||
+			laserGameObject->getPositionY() >= this->height || laserGameObject->getPositionY() <= 0) {
+			this->laserIsShooting = false;
+			//GameObjectManager::getInstance()->removeGameObject(laserGameObject);
+		}
+	}*/
+	if (this->laserIsShooting) {
+		laserGameObject.setPositionY(laserGameObject.getPositionY() + laserGameObject.getSpeedY() * dt);
+		Renderer::getInstance()->draw(laserGameObject, true);
+		if (laserGameObject.getPositionX() >= this->width || laserGameObject.getPositionX() <= 0 ||
+			laserGameObject.getPositionY() >= this->height || laserGameObject.getPositionY() <= 0) {
+			this->laserIsShooting = false;
+		}
+	}
+	if (!this->laserIsShooting) {
+		laserGameObject.setPositionX(dvdGameObject.getPositionX());
+		laserGameObject.setPositionY(dvdGameObject.getPositionY() + (dvdGameObject.getSizeY()) / 2 + 20.0f);
+	}
 }
 
 void Game::render(float dt) {
@@ -187,39 +226,19 @@ void Game::render(float dt) {
 			dvdGameObject->setRotation(0.0f);
 			dvdGameObject->setSpeedX(300.0f);
 			dvdGameObject->setScale(this->destinationScale);
-			laserGameObject->setPositionX(dvdGameObject->getPositionX());
-			laserGameObject->setPositionY(dvdGameObject->getPositionY());
+			/*laserGameObject->setPositionX(dvdGameObject->getPositionX());
+			laserGameObject->setPositionY(dvdGameObject->getPositionY());*/
 			dvdGameObject->getDrawData()->getShader()->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
 			spawnEnemies(this->numberOfLines, this->numberOfEnemiesPerLine);
 		}
 	}
 	else if (this->gameState == ACTIVE) {
+		spawnEnemyProjectiles();
 		updateEnemies();
 		Renderer::getInstance()->draw(*dvdGameObject, true);
-		if (this->laserIsShooting) {
-			laserGameObject->setPositionY(laserGameObject->getPositionY() + laserGameObject->getSpeedY() * dt);
-			Renderer::getInstance()->draw(*laserGameObject, true);
-		}
-		if (laserGameObject->getPositionX() >= this->width || laserGameObject->getPositionX() <= 0 || laserGameObject->getPositionY() >= this->height || laserGameObject->getPositionY() <= 0) {
-			laserGameObject->setPositionX(dvdGameObject->getPositionX());
-			laserGameObject->setPositionY(dvdGameObject->getPositionY());
-			this->laserIsShooting = false;
-		}
-		for (int i = 0; i < this->enemies->size(); i++) {
-			if (checkCollision(*this->enemies->at(i),
-				glm::vec2(laserGameObject->getPositionX(), laserGameObject->getPositionY()),
-				glm::vec2(laserGameObject->getScaledSizeX(), laserGameObject->getScaledSizeX()))) {
-				this->enemies->at(i)->setIsHit(true);
-				this->enemies->at(i)->setPositionX(dvdGameObject->getPositionX());
-				this->enemies->at(i)->setPositionY(dvdGameObject->getPositionY());
-				this->score++;
-				this->windowTitle = "Score: " + std::to_string(this->score);
-				glfwSetWindowTitle(this->window, this->windowTitle.c_str());
-				laserGameObject->setPositionX(dvdGameObject->getPositionX());
-				laserGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getScaledSizeX());
-				this->laserIsShooting = false;
-			}
-		}
+
+		updateLaser(*laserGameObject, *dvdGameObject, dt);
+		checkCollisions();
 		if (this->score == this->enemies->size()) {
 			this->gameState = WIN;
 			this->windowTitle = "WIN";
@@ -268,10 +287,7 @@ void Game::updateEnemies() {
 	}
 }
 void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
-	Mesh* bluRayMesh = ResourceManager::getInstance()->getMeshByName("bluRayMesh");
-	Shader* bluRayShader = ResourceManager::getInstance()->getShaderByName("bluRayShader");
-	Texture2D* bluRayTexture = ResourceManager::getInstance()->getTexture2DByName("bluRayTexture");
-	DrawData* bluRayDrawData = new DrawData(*bluRayMesh, *bluRayShader, *bluRayTexture);
+	DrawData* bluRayDrawData = ResourceManager::getInstance()->getDrawDataByName("bluRayDrawData");
 	float bluRaySizeX = 60.0f;
 	float bluRaySizeY = 45.0f;
 	float initialEnemyX = 60.0f;
@@ -287,8 +303,30 @@ void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
 		currentEnemyY -= (bluRaySizeY * 1.5f);
 	}
 }
-bool Game::checkCollision(GameObject& gameObject, glm::vec2 positionTwo, glm::vec2 sizeTwo) {
-	bool collisionX = gameObject.getPositionX() + gameObject.getSizeX() >= positionTwo.x && positionTwo.x + sizeTwo.x >= gameObject.getPositionX();
-	bool collisionY = gameObject.getPositionY() + gameObject.getSizeY() >= positionTwo.y && positionTwo.y + sizeTwo.y >= gameObject.getPositionY();
-	return collisionX && collisionY;
+void Game::checkCollisions() {
+	bool foundCollision = false;
+	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
+	for (int i = 0; i < this->enemies->size(); i++) {
+		GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
+		bool collisionX = this->enemies->at(i)->getPositionX() + this->enemies->at(i)->getSizeX() >= laserGameObject->getPositionX() && laserGameObject->getPositionX() + laserGameObject->getSizeX() >= this->enemies->at(i)->getPositionX();
+		bool collisionY = this->enemies->at(i)->getPositionY() + this->enemies->at(i)->getSizeY() >= laserGameObject->getPositionY() && laserGameObject->getPositionY() + laserGameObject->getSizeY() >= this->enemies->at(i)->getPositionY();
+		if (collisionX && collisionY) {
+			this->enemies->at(i)->setIsHit(true);
+			this->enemies->at(i)->setPositionX(9999.0f);
+			this->enemies->at(i)->setPositionY(9999.0f);
+			this->score++;
+			this->windowTitle = "Score: " + std::to_string(this->score);
+			glfwSetWindowTitle(this->window, this->windowTitle.c_str());
+			this->laserIsShooting = false;
+		}
+	}
+}
+
+void Game::spawnEnemyProjectiles(){
+	double currentTime = glfwGetTime();
+	int randomTimeDifference = this->randomEnemyProjectileSpawnTime[rand() % 6];
+	int timePassed = currentTime - this->startTime;
+	if (timePassed % randomTimeDifference == 0) {
+		std::cout << "Spawned Projectile!" << std::endl;
+	}
 }

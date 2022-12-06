@@ -17,9 +17,16 @@ GameObjectManager* GameObjectManager::getInstance() {
     return instance;
 }
 
+GameObject* GameObjectManager::addGameObject(std::string name, DrawData& drawData,
+    float positionX, float positionY, float sizeX, float sizeY, float scale, float rotation, float speedX, float speedY, bool isHit) {
+    GameObject* gameObject = new GameObject(name, drawData, positionX, positionY, sizeX, sizeY, scale, rotation, speedX, speedY, isHit);
+    this->gameObjectList->push_back(gameObject);
+    return gameObject;
+}
+
 GameObject* GameObjectManager::addGameObject(std::string name, Mesh& mesh, Shader& shader, Texture2D& texture2D,
     float positionX, float positionY, float sizeX, float sizeY, float scale, float rotation, float speedX, float speedY, bool isHit){
-    DrawData* drawData = new DrawData(mesh, shader, texture2D);
+    DrawData* drawData = new DrawData(name + "DrawData", mesh, shader, texture2D);
     GameObject* gameObject = new GameObject(name, *drawData, positionX, positionY, sizeX, sizeY, scale, rotation, speedX, speedY, isHit);
     this->gameObjectList->push_back(gameObject);
     return gameObject;
@@ -31,6 +38,17 @@ GameObject* GameObjectManager::getGameObjectByName(std::string name) {
             return this->gameObjectList->at(i);
         }
     }
+    return nullptr;
+}
+void GameObjectManager::removeGameObject(GameObject* gameObject){
+    std::vector<GameObject*>* tempGameObjectList = new std::vector<GameObject*>();
+    for (int i = 0; i < this->gameObjectList->size(); i++) {
+        if (this->gameObjectList->at(i) != gameObject) {
+            tempGameObjectList->push_back(this->gameObjectList->at(i));
+        }
+    }
+    delete this->gameObjectList;
+    this->gameObjectList = tempGameObjectList;
 }
 void GameObjectManager::clear() {
     delete this->gameObjectList;
