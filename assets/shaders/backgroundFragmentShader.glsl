@@ -28,6 +28,6 @@ void main(){
 	texcol.x = z;
 	texcol.y = z;
 	texcol.z = z;
-	
+
 	fragColor = vec4(col*texcol,0.2);
 }

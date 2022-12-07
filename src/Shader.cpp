@@ -51,7 +51,7 @@ void Shader::compile(unsigned int shader, std::string shaderSource) {
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (!success) {
 		glGetShaderInfoLog(shader, 512, NULL, infoLog);
-		std::cout << "Error compiling shaders!\n" << infoLog << std::endl;
+		std::cout << "Error compiling shader " << this->name << "\n" << infoLog << std::endl;
 	}
 }
 void Shader::createProgramAndAttachShaders(unsigned int vertexShader, unsigned int fragmentShader) {
@@ -64,7 +64,7 @@ void Shader::createProgramAndAttachShaders(unsigned int vertexShader, unsigned i
 	glGetProgramiv(this->shaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(this->shaderProgram, 512, NULL, infoLog);
-		std::cout << "Error linking shaders!\n" << infoLog << std::endl;
+		std::cout << "Error linking shader " << this->name << "\n" << infoLog << std::endl;
 	}
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);

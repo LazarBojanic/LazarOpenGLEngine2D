@@ -7,6 +7,7 @@ Application::Application(unsigned int width, unsigned int height) {
     Game::getInstance(this->window, this->width, this->height)->init();
 }
 Application::~Application() {
+    
 }
 
 void Application::initGlfw() {

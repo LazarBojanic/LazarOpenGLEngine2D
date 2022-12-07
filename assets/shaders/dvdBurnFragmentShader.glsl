@@ -30,7 +30,7 @@ float noise(vec2 coord){
 	float c = rand(wholePart + vec2(0.0, 1.0));
 	float d = rand(wholePart + vec2(1.0, 1.0));
 
-	vec2 cubic = decimalPart * decimalPart * (3.0 - 2.0 * f);
+	vec2 cubic = decimalPart * decimalPart * (3.0 - 2.0 * decimalPart);
 
 	return mix(a, b, cubic.x) + (c - a) * cubic.y * (1.0 - cubic.x) + (d - b) * cubic.x * cubic.y;
 }
