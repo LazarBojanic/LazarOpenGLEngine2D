@@ -10,12 +10,14 @@ Game::Game(GLFWwindow* window, unsigned int width, unsigned int height) {
 	this->keys = new bool[1024];
 	initKeys();
 	this->startTime = glfwGetTime();
+	this->soundEngine = createIrrKlangDevice();
 }
 Game::~Game() {
 	delete[] this->keys;
 	delete[] this->colorsArray;
 	delete this->enemies;
 	delete[] this->intervals;
+	delete this->soundEngine;
 }
 
 Game* Game::getInstance(GLFWwindow* window, unsigned int width, unsigned int height) {
@@ -325,6 +327,7 @@ void Game::checkCollisions() {
 		bool collisionX = this->enemies->at(i)->getPositionX() + this->enemies->at(i)->getSizeX() >= laserGameObject->getPositionX() && laserGameObject->getPositionX() + laserGameObject->getSizeX() >= this->enemies->at(i)->getPositionX();
 		bool collisionY = this->enemies->at(i)->getPositionY() + this->enemies->at(i)->getSizeY() >= laserGameObject->getPositionY() && laserGameObject->getPositionY() + laserGameObject->getSizeY() >= this->enemies->at(i)->getPositionY();
 		if (collisionX && collisionY) {
+			this->soundEngine->play2D("assets\\sounds\\bleep.wav", false);
 			this->enemies->at(i)->setIsHit(true);
 			this->enemies->at(i)->setPositionX(9999.0f);
 			this->enemies->at(i)->setPositionY(9999.0f);
@@ -367,17 +370,6 @@ void Game::updateEnemyProjectiles(float dt) {
 	std::cout << projectiles->size() << std::endl;
 	if (projectiles->size() > 0) {
 		for (int i = 0; i < projectiles->size(); i++) {
-			/*if (projectiles->at(i)->getPositionX() + (projectiles->at(i)->getSizeX() / 2) >= this->width - 4.0f ||
-				projectiles->at(i)->getPositionX() - (projectiles->at(i)->getSizeX() / 2) <= 4.0f ||
-				projectiles->at(i)->getPositionY() + (projectiles->at(i)->getSizeY() / 2) >= this->height - 4.0f || 
-				projectiles->at(i)->getPositionY() - (projectiles->at(i)->getSizeY() / 2) <= 4.0f) {
-				//discard
-			}
-			else {
-				projectiles->at(i)->setPositionY(projectiles->at(i)->getPositionY() - projectiles->at(i)->getSpeedY() * dt);
-				projectiles->at(i)->setRotation(projectiles->at(i)->getRotation() + 100.0f * dt);
-				Renderer::getInstance()->drawUntextured(*projectiles->at(i), true);
-			}*/
 			projectiles->at(i)->setPositionY(projectiles->at(i)->getPositionY() - projectiles->at(i)->getSpeedY() * dt);
 			projectiles->at(i)->setRotation(projectiles->at(i)->getRotation() + 100.0f * dt);
 			Renderer::getInstance()->drawUntextured(*projectiles->at(i), true);

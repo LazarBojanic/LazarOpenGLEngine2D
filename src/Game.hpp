@@ -18,6 +18,7 @@ enum GameState {
 class Game {
 private:
     GLFWwindow* window;
+    ISoundEngine* soundEngine;
     std::string windowTitle;
     static Game* instance;
     GameState gameState;
