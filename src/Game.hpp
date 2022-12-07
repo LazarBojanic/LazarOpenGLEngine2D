@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "GLData.hpp"
 #include "ResourceManager.hpp"
 #include "GameObjectManager.hpp"
@@ -15,7 +14,6 @@ enum GameState {
     WIN,
     LOSS
 };
-
 
 class Game {
 private:
@@ -45,7 +43,9 @@ private:
     int numberOfLines;
     int numberOfEnemiesPerLine;
     std::vector<GameObject*>* enemies;
-    int* randomEnemyProjectileSpawnTime;
+    int enemyIndexOfProjectile;
+    float* intervals;
+    float interval;
 
     bool laserIsShooting;
 
@@ -84,6 +84,7 @@ public:
     void updateWindowSize(int width, int height);
     void checkCollisions();
     void updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, float dt);
-    void spawnEnemyProjectiles();
+    void spawnEnemyProjectiles(float dt);
+    void updateEnemyProjectiles(float dt);
+    void trimEnemyProjectiles(float dt);
 };
-    

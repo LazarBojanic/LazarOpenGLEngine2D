@@ -30,16 +30,16 @@ public:
 	Texture2D* getTexture2DByName(std::string name);
 	DrawData* getDrawDataByName(std::string name);
 
-	std::vector<Mesh*>* getMeshList() {
+	inline std::vector<Mesh*>* getMeshList() {
 		return this->meshList;
 	}
-	std::vector<Shader*>* getShaderList() {
+	inline std::vector<Shader*>* getShaderList() {
 		return this->shaderList;
 	}
-	std::vector<Texture2D*>* getTexture2DList() {
+	inline std::vector<Texture2D*>* getTexture2DList() {
 		return this->texture2DList;
 	}
-	std::vector<DrawData*>* getDrawDataList() {
+	inline std::vector<DrawData*>* getDrawDataList() {
 		return this->drawDataList;
 	}
 	void clear();

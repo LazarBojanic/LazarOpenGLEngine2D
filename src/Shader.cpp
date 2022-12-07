@@ -4,6 +4,7 @@ Shader::Shader() {
 }
 
 Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath, std::string name) {
+	HRESULT guidResult = CoCreateGuid(&this->id);
 	this->name = name;
 	createVertexShader();
 	createFragmentShader();

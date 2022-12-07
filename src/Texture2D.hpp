@@ -4,6 +4,7 @@
 
 class Texture2D{
 private:
+	GUID id;
     std::string name;
 	unsigned int textureID;
 	unsigned int width;
@@ -21,33 +22,34 @@ public:
     void generate(unsigned char* data);
     void bind(unsigned int textureChannel);
     void unbind();
-
-	std::string getName() {
+	inline GUID getId() {
+		return this->id;
+	}
+	inline std::string getName() {
 		return this->name;
 	}
-	unsigned int getTextureID() {
+	inline unsigned int getTextureID() {
 		return this->textureID;
 	}
-	unsigned int getWidth() {
+	inline unsigned int getWidth() {
 		return this->width;
 	}
-	unsigned int getHeight() {
+	inline unsigned int getHeight() {
 		return this->height;
 	}
-	unsigned int getWrap_S() {
+	inline unsigned int getWrap_S() {
 		return this->wrap_S;
 	}
-	unsigned int getWrap_T() {
+	inline unsigned int getWrap_T() {
 		return this->wrap_T;
 	}
-	unsigned int getFilterMin() {
+	inline unsigned int getFilterMin() {
 		return this->filterMin;
 	}
-	unsigned int getFilterMax() {
+	inline unsigned int getFilterMax() {
 		return this->filterMax;
 	}
-	unsigned int getImageFormat() {
+	inline unsigned int getImageFormat() {
 		return this->imageFormat;
 	}
 };
-

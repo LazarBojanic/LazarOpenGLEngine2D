@@ -1,6 +1,7 @@
 #include "Mesh.hpp"
 
 Mesh::Mesh() {
+	HRESULT guidResult = CoCreateGuid(&this->id);
 	this->data = nullptr;
 	this->indices = nullptr;
 	this->vertexCount = 0;
@@ -12,6 +13,7 @@ Mesh::Mesh() {
 }
 
 Mesh::Mesh(float* data, unsigned int dataSize, unsigned int* indices, unsigned int indicesSize, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions, const Texture2D& texture2D, unsigned int textureChannel){
+	HRESULT guidResult = CoCreateGuid(&this->id);
 	this->data = data;
 	this->indices = indices;
 	this->vertexCount = indicesSize;
@@ -35,6 +37,7 @@ Mesh::Mesh(float* data, unsigned int dataSize, unsigned int* indices, unsigned i
 	this->vertexArray->unbind();
 }
 Mesh::Mesh(Primitive& primitive, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions) {
+	HRESULT guidResult = CoCreateGuid(&this->id);
 	this->name = name;
 	this->primitive = new Primitive(primitive);
 	this->vertexArray = new VertexArray();

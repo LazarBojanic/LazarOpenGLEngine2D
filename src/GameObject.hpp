@@ -5,7 +5,9 @@
 
 class GameObject {
 private:
+	GUID id;
 	std::string name;
+	std::string tag;
 	DrawData* drawData;
 	float positionX, positionY;
 	float sizeX, sizeY;
@@ -16,10 +18,16 @@ private:
 	bool isHit;
 public:
 	GameObject();
-	GameObject(std::string name, DrawData& drawData, float positionX, float positionY, float sizeX, float sizeY, float scale, float rotation, float speedX, float speedY, bool isHit);
+	GameObject(std::string name, std::string tag, DrawData& drawData, float positionX, float positionY, float sizeX, float sizeY, float scale, float rotation, float speedX, float speedY, bool isHit);
 	~GameObject();
+	inline GUID getId() {
+		return this->id;
+	}
 	inline std::string getName() {
 		return this->name;
+	}
+	inline std::string getTag() {
+		return this->tag;
 	}
 	inline DrawData* getDrawData() {
 		return this->drawData;
@@ -60,6 +68,9 @@ public:
 
 	inline void setName(std::string name) {
 		this->name = name;
+	}
+	inline void setTag(std::string tag) {
+		this->tag = tag;
 	}
 	inline void setPositionX(float positionX) {
 		this->positionX = positionX;

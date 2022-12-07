@@ -15,6 +15,7 @@ Game::~Game() {
 	delete[] this->keys;
 	delete[] this->colorsArray;
 	delete this->enemies;
+	delete[] this->intervals;
 }
 
 Game* Game::getInstance(GLFWwindow* window, unsigned int width, unsigned int height) {
@@ -55,7 +56,6 @@ void Game::initVariables() {
 	this->dvdTransitionSpeed = 200.0f;
 	this->dvdDestinationX = this->width / 2.0f;
 	this->dvdDestinationY = 50.0f;
-	
 
 	this->dvdRotationWhileTransition = 0.0f;
 	this->dvdRotationWhileTransitionSpeed = 300.0f;
@@ -66,9 +66,11 @@ void Game::initVariables() {
 	this->numberOfLines = 1;
 	this->numberOfEnemiesPerLine = 4;
 	this->enemies = new std::vector<GameObject*>();
-	this->randomEnemyProjectileSpawnTime = new int[6] {
-		4, 5, 6, 7, 8, 9
+	this->enemyIndexOfProjectile = 0;
+	this->intervals = new float[4] {
+		2.0f, 4.0, 6.0f, 8.0f
 	};
+	this->interval = 0.0f;
 
 	this->laserIsShooting = false;
 
@@ -78,17 +80,22 @@ void Game::initResources() {
 	glm::mat4 projection = glm::ortho(0.0f, (float)this->width, 0.0f, (float)this->height, -1.0f, 1.0f);
 
 	Quad* quad = new Quad();
-	
+	Triangle* triangle = new Triangle();
+
+	Mesh* projectileMesh = ResourceManager::getInstance()->addMesh(*triangle, "projectileMesh", 0, 3, 1, 3, 2, 2);
 	Mesh* dvdMesh = ResourceManager::getInstance()->addMesh(*quad, "dvdMesh", 0, 3, 1, 3, 2, 2);
 	Mesh* backgroundMesh = ResourceManager::getInstance()->addMesh(*quad, "backgroundMesh", 0, 3, 1, 3, 2, 2);
 	Mesh* bluRayMesh = ResourceManager::getInstance()->addMesh(*quad, "bluRayMesh", 0, 3, 1, 3, 2, 2);
 	Mesh* laserMesh = ResourceManager::getInstance()->addMesh(*quad, "laserMesh", 0, 3, 1, 3, 2, 2);
 	
+	Shader* projectileShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\triangleVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\triangleFragmentShader.glsl", "projectileShader");
 	Shader* dvdShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\dvdVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\dvdBurnFragmentShader.glsl", "dvdShader");
 	Shader* backgroundShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\backgroundVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\backgroundFragmentShader.glsl", "backgroundShader");
 	Shader* bluRayShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\bluRayVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\bluRayFragmentShader.glsl", "bluRayShader");
 	Shader* laserShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\laserVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\shaders\\laserFragmentShader.glsl", "laserShader");
 	
+
+	projectileShader->setMatrix4f("uProjection", projection, true);
 
 	dvdShader->setVector4f("uColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true);
 	dvdShader->setMatrix4f("uProjection", projection, true);
@@ -110,12 +117,13 @@ void Game::initResources() {
 	Texture2D* bluRayTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\textures\\bluRayLogo.png", true, "bluRayTexture");
 	Texture2D* laserTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\textures\\laser.png", true, "laserTexture");
 
+	ResourceManager::getInstance()->addDrawData("projectileDrawData", *projectileMesh, *projectileShader, *laserTexture);
 	ResourceManager::getInstance()->addDrawData("bluRayDrawData", *bluRayMesh, *bluRayShader, *bluRayTexture);
 
-	GameObjectManager::getInstance()->addGameObject("laserGameObject", *laserMesh, *laserShader, *laserTexture, 9999.0f, 9999.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
-	GameObjectManager::getInstance()->addGameObject("dvdGameObject", *dvdMesh, *dvdShader, *dvdTexture, this->width / 2 + 50.0f, this->height / 2 + 50.0f, 160.0f, 120.0f, 1.0f, 0.0f, 200.0f, 200.0f, false);
-	GameObjectManager::getInstance()->addGameObject("backgroundGameObject", *backgroundMesh, *backgroundShader, *dvdTexture, this->width / 2, this->height / 2, this->width, this->height, 1.0f, 0.0f, 0.0f, 0.0f, false);
-	GameObjectManager::getInstance()->addGameObject("bluRayGameObject", *bluRayMesh, *bluRayShader, *bluRayTexture, 60.0f, this->height - 45.0f, 80.0f, 60.0f, 1.0f, 0.0f, 0.0f, 0.0f, false);
+	GameObjectManager::getInstance()->addGameObject("laserGameObject", "laser", * laserMesh, *laserShader, *laserTexture, 9999.0f, 9999.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
+	GameObjectManager::getInstance()->addGameObject("dvdGameObject", "dvd", *dvdMesh, *dvdShader, *dvdTexture, this->width / 2 + 50.0f, this->height / 2 + 50.0f, 160.0f, 120.0f, 1.0f, 0.0f, 200.0f, 200.0f, false);
+	GameObjectManager::getInstance()->addGameObject("backgroundGameObject", "background", *backgroundMesh, *backgroundShader, *dvdTexture, this->width / 2, this->height / 2, this->width, this->height, 1.0f, 0.0f, 0.0f, 0.0f, false);
+	GameObjectManager::getInstance()->addGameObject("bluRayGameObject", "bluRay", *bluRayMesh, *bluRayShader, *bluRayTexture, 60.0f, this->height - 45.0f, 80.0f, 60.0f, 1.0f, 0.0f, 0.0f, 0.0f, false);
 }
 void Game::init() {
 	initVariables();
@@ -233,8 +241,14 @@ void Game::render(float dt) {
 		}
 	}
 	else if (this->gameState == ACTIVE) {
-		spawnEnemyProjectiles();
 		updateEnemies();
+		trimEnemyProjectiles(dt);
+		spawnEnemyProjectiles(dt);
+		updateEnemyProjectiles(dt);
+		/*GameObject* projectileGameObject = GameObjectManager::getInstance()->getGameObjectByName("projectileGameObject");
+		projectileGameObject->setPositionY(projectileGameObject->getPositionY() - projectileGameObject->getSpeedY() * dt);
+		Renderer::getInstance()->draw(*projectileGameObject, true);*/
+		
 		Renderer::getInstance()->draw(*dvdGameObject, true);
 
 		updateLaser(*laserGameObject, *dvdGameObject, dt);
@@ -247,7 +261,7 @@ void Game::render(float dt) {
 			this->dvdDestinationY = (this->height / 2 + 50.0f);
 			this->deltaX = this->dvdDestinationX - dvdGameObject->getPositionX();
 			this->deltaY = this->dvdDestinationY - dvdGameObject->getPositionY();
-			this->deltaVector = glm::sqrt(glm::pow(this->deltaX, 2.0f) + glm::pow(this->deltaY, 2.0f));
+			this->deltaVector = glm::sqrt(this->deltaX * this->deltaX + this->deltaY * this->deltaY);
 			this->destinationScale = 1.0f;
 			this->deltaScale = dvdGameObject->getScale() - this->destinationScale;
 			
@@ -295,7 +309,7 @@ void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
 	float currentEnemyY = this->height - 45.0f;
 	for (int i = 0; i < numberOfLines; i++) {
 		for (int j = 0; j < numberOfEnemiesPerLine; j++) {
-			GameObject* gameObject = new GameObject("enemy" + std::to_string(i * numberOfEnemiesPerLine + j), *bluRayDrawData, currentEnemyX, currentEnemyY, bluRaySizeX, bluRaySizeY, 1.0f, 0.0f, 0.0f, 0.0f, false);
+			GameObject* gameObject = new GameObject("enemy" + std::to_string(i * numberOfEnemiesPerLine + j), "enemy", *bluRayDrawData, currentEnemyX, currentEnemyY, bluRaySizeX, bluRaySizeY, 1.0f, 0.0f, 0.0f, 0.0f, false);
 			this->enemies->push_back(gameObject);
 			currentEnemyX += (bluRaySizeX * 2.2f);
 		}
@@ -322,11 +336,52 @@ void Game::checkCollisions() {
 	}
 }
 
-void Game::spawnEnemyProjectiles(){
-	double currentTime = glfwGetTime();
-	int randomTimeDifference = this->randomEnemyProjectileSpawnTime[rand() % 6];
-	int timePassed = currentTime - this->startTime;
-	if (timePassed % randomTimeDifference == 0) {
-		std::cout << "Spawned Projectile!" << std::endl;
+void Game::spawnEnemyProjectiles(float dt){
+	this->interval -= dt;
+	if (this->interval < 0) {
+		this->enemyIndexOfProjectile = rand() % this->enemies->size();
+		GameObject* bluRayGameObject = this->enemies->at(this->enemyIndexOfProjectile);
+		DrawData* projectileDrawData = ResourceManager::getInstance()->getDrawDataByName("projectileDrawData");
+		GameObject* projectileGameObject = GameObjectManager::getInstance()->addGameObject("projectileGameObject", "projectile", *projectileDrawData, bluRayGameObject->getPositionX(), bluRayGameObject->getPositionY() - bluRayGameObject->getSizeY() / 2 - 20.0f,
+			25.0f, 25.0f, 1.0f, 0.0f, 0.0f, 300.0f, false);
+	
+		std::cout << "Spawned projectile!" << std::endl;
+		this->interval = this->intervals[rand() & 4];
 	}
+	//std::cout << this->interval << std::endl;
+}
+void Game::trimEnemyProjectiles(float dt) {
+	std::vector<GameObject*>* projectiles = GameObjectManager::getInstance()->getGameObjectsByTag("projectile");
+	for (int i = 0; i < projectiles->size(); i++) {
+		if (projectiles->at(i)->getPositionX() + (projectiles->at(i)->getSizeX() / 2) >= this->width - 4.0f ||
+			projectiles->at(i)->getPositionX() - (projectiles->at(i)->getSizeX() / 2) <= 4.0f ||
+			projectiles->at(i)->getPositionY() + (projectiles->at(i)->getSizeY() / 2) >= this->height - 4.0f ||
+			projectiles->at(i)->getPositionY() - (projectiles->at(i)->getSizeY() / 2) <= 4.0f) {
+			GameObjectManager::getInstance()->removeGameObject(projectiles->at(i));
+		}
+	}
+
+}
+void Game::updateEnemyProjectiles(float dt) {
+	std::vector<GameObject*>* projectiles = GameObjectManager::getInstance()->getGameObjectsByTag("projectile");
+	std::cout << projectiles->size() << std::endl;
+	if (projectiles->size() > 0) {
+		for (int i = 0; i < projectiles->size(); i++) {
+			/*if (projectiles->at(i)->getPositionX() + (projectiles->at(i)->getSizeX() / 2) >= this->width - 4.0f ||
+				projectiles->at(i)->getPositionX() - (projectiles->at(i)->getSizeX() / 2) <= 4.0f ||
+				projectiles->at(i)->getPositionY() + (projectiles->at(i)->getSizeY() / 2) >= this->height - 4.0f || 
+				projectiles->at(i)->getPositionY() - (projectiles->at(i)->getSizeY() / 2) <= 4.0f) {
+				//discard
+			}
+			else {
+				projectiles->at(i)->setPositionY(projectiles->at(i)->getPositionY() - projectiles->at(i)->getSpeedY() * dt);
+				projectiles->at(i)->setRotation(projectiles->at(i)->getRotation() + 100.0f * dt);
+				Renderer::getInstance()->drawUntextured(*projectiles->at(i), true);
+			}*/
+			projectiles->at(i)->setPositionY(projectiles->at(i)->getPositionY() - projectiles->at(i)->getSpeedY() * dt);
+			projectiles->at(i)->setRotation(projectiles->at(i)->getRotation() + 100.0f * dt);
+			Renderer::getInstance()->drawUntextured(*projectiles->at(i), true);
+		}
+	}
+	delete projectiles;
 }

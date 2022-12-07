@@ -9,6 +9,7 @@
 
 class Mesh {
 private:
+	GUID id;
 	std::string name;
 	VertexArray* vertexArray;
 	VertexBuffer* vertexBuffer;
@@ -23,31 +24,34 @@ public:
 	Mesh(Primitive& primitive, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions);
 	Mesh(float* data, unsigned int dataSize, unsigned int* indices, unsigned int indicesSize, std::string name, int positionAttributeNumber, int positionDimensions, int colorAttributeNumber, int colorDimensions, int textureAttributeNumber, int textureDimensions, const Texture2D& texture2D, unsigned int textureChannel);
 	~Mesh();
-	std::string getName() {
+	inline GUID getId() {
+		return this->id;
+	}
+	inline std::string getName() {
 		return this->name;
 	}
-	VertexArray* getVertexArray() {
+	inline VertexArray* getVertexArray() {
 		return this->vertexArray;
 	}
-	VertexBuffer* getVertexBuffer() {
+	inline VertexBuffer* getVertexBuffer() {
 		return this->vertexBuffer;
 	}
-	Primitive* getPrimitive() {
+	inline Primitive* getPrimitive() {
 		return this->primitive;
 	}
-	unsigned int getTextureChannel() {
+	inline unsigned int getTextureChannel() {
 		return this->textureChannel;
 	}
-	Texture2D* getTexture2D() {
+	inline Texture2D* getTexture2D() {
 		return this->texture2D;
 	}
-	float* getData() {
+	inline float* getData() {
 		return this->data;
 	}
-	unsigned int* getIndices() {
+	inline unsigned int* getIndices() {
 		return this->indices;
 	}
-	unsigned int getVertexCount() {
+	inline unsigned int getVertexCount() {
 		return this->vertexCount;
 	}
 };

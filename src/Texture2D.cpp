@@ -6,7 +6,7 @@ Texture2D::Texture2D() {
 }
 
 Texture2D::Texture2D(std::string textureFilePath, bool alpha, std::string name) {
-    
+    HRESULT guidResult = CoCreateGuid(&this->id);
     this->name = name;
     this->wrap_S = GL_REPEAT;
     this->wrap_T = GL_REPEAT;

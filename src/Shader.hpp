@@ -4,6 +4,7 @@
 
 class Shader{
 private:
+	GUID id;
 	std::string name;
 	unsigned int shaderProgram;
 	std::string vertexShaderSource;
@@ -31,22 +32,25 @@ public:
 	void setVector4f(std::string name, glm::vec4 value, bool useShader);
 	void setMatrix4f(std::string name, glm::mat4 value, bool useShader);
 
-	std::string getName() {
+	inline GUID getId() {
+		return this->id;
+	}
+	inline std::string getName() {
 		return this->name;
 	}
-	unsigned int getShaderProgram() {
+	inline unsigned int getShaderProgram() {
 		return this->shaderProgram;
 	}
-	std::string getVertexShaderSource() {
+	inline std::string getVertexShaderSource() {
 		return this->vertexShaderSource;
 	}
-	std::string getFragmentShaderSource() {
+	inline std::string getFragmentShaderSource() {
 		return this->fragmentShaderSource;
 	}
-	unsigned int getVertexShaderID() {
+	inline unsigned int getVertexShaderID() {
 		return this->vertexShaderID;
 	}
-	unsigned int getFragmentShaderID() {
+	inline unsigned int getFragmentShaderID() {
 		return this->fragmentShaderID;
 	}
 };
