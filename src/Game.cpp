@@ -15,7 +15,6 @@ Game::Game(GLFWwindow* window, unsigned int width, unsigned int height) {
 Game::~Game() {
 	delete[] this->keys;
 	delete[] this->colorsArray;
-	delete this->enemies;
 	delete[] this->intervals;
 	delete this->soundEngine;
 }
@@ -67,7 +66,6 @@ void Game::initVariables() {
 
 	this->numberOfLines = 1;
 	this->numberOfEnemiesPerLine = 4;
-	this->enemies = new std::vector<GameObject*>();
 	this->enemyIndexOfProjectile = 0;
 	this->intervals = new float[4] {
 		2.0f, 4.0, 6.0f, 8.0f
@@ -166,22 +164,6 @@ void Game::processInput(float dt) {
 void Game::update(float dt) {
 }
 void Game::updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, float dt) {
-	/*GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
-	GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
-	if (laserGameObject == nullptr) {
-		DrawData* laserDrawData = ResourceManager::getInstance()->getDrawDataByName("laserDrawData");
-		laserGameObject = GameObjectManager::getInstance()->addGameObject("laserGameObject", *laserDrawData, dvdGameObject->getPositionX(), dvdGameObject->getPositionY() + dvdGameObject->1Y(),
-			20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
-	}
-	if (this->laserIsShooting) {
-		laserGameObject->setPositionY(laserGameObject->getPositionY() + laserGameObject->getSpeedY() * dt);
-		Renderer::getInstance()->draw(*laserGameObject, true);
-		if (laserGameObject->getPositionX() >= this->width || laserGameObject->getPositionX() <= 0 ||
-			laserGameObject->getPositionY() >= this->height || laserGameObject->getPositionY() <= 0) {
-			this->laserIsShooting = false;
-			//GameObjectManager::getInstance()->removeGameObject(laserGameObject);
-		}
-	}*/
 	if (this->laserIsShooting) {
 		laserGameObject.setPositionY(laserGameObject.getPositionY() + laserGameObject.getSpeedY() * dt);
 		Renderer::getInstance()->draw(laserGameObject, true);
@@ -200,6 +182,7 @@ void Game::render(float dt) {
 	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
 	GameObject* backgroundGameObject = GameObjectManager::getInstance()->getGameObjectByName("backgroundGameObject");
 	GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
+	std::vector<GameObject*>* enemies = GameObjectManager::getInstance()->getGameObjectsByTag("enemy");
 	backgroundGameObject->getDrawData()->getShader()->setFloat("uTime", glfwGetTime(), true);
 	dvdGameObject->getDrawData()->getShader()->setFloat("uTime", glfwGetTime(), true);
 	
@@ -249,7 +232,7 @@ void Game::render(float dt) {
 		Renderer::getInstance()->draw(*dvdGameObject, true);
 		updateLaser(*laserGameObject, *dvdGameObject, dt);
 		checkCollisions();
-		if (this->score == this->enemies->size()) {
+		if (this->score == enemies->size()) {
 			this->gameState = WIN;
 			this->windowTitle = "WIN";
 			glfwSetWindowTitle(this->window, this->windowTitle.c_str());
@@ -282,19 +265,11 @@ void Game::render(float dt) {
 		glfwSetWindowTitle(this->window, this->windowTitle.c_str());
 		this->gameState = SCREEN_SAVER;
 	}
+	delete enemies;
 }
 void Game::clear() {
 	delete[] this->keys;
 	delete[] this->colorsArray;
-	delete this->enemies;
-}
-void Game::updateEnemies() {
-	for (int i = 0; i < this->enemies->size(); i++) {
-		if (!this->enemies->at(i)->getIsHit()) {
-			this->enemies->at(i)->getDrawData()->getShader()->setVector4f("uColor", glm::vec4(0.125f, 0.4f, 0.95f, 1.0f), true);
-			Renderer::getInstance()->draw(*this->enemies->at(i), false);
-		}
-	}
 }
 void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
 	DrawData* bluRayDrawData = ResourceManager::getInstance()->getDrawDataByName("bluRayDrawData");
@@ -305,47 +280,67 @@ void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
 	float currentEnemyY = this->height - 45.0f;
 	for (int i = 0; i < numberOfLines; i++) {
 		for (int j = 0; j < numberOfEnemiesPerLine; j++) {
-			GameObject* gameObject = new GameObject("enemy" + std::to_string(i * numberOfEnemiesPerLine + j), "enemy", *bluRayDrawData, currentEnemyX, currentEnemyY, bluRaySizeX, bluRaySizeY, 1.0f, 0.0f, 0.0f, 0.0f, false);
-			this->enemies->push_back(gameObject);
+			GameObjectManager::getInstance()->addGameObject("enemy" + std::to_string(i * numberOfEnemiesPerLine + j), "enemy", *bluRayDrawData, currentEnemyX, currentEnemyY, bluRaySizeX, bluRaySizeY, 1.0f, 0.0f, 0.0f, 0.0f, false);
 			currentEnemyX += (bluRaySizeX * 2.2f);
 		}
 		currentEnemyX = initialEnemyX;
 		currentEnemyY -= (bluRaySizeY * 1.5f);
 	}
 }
+void Game::updateEnemies() {
+	std::vector<GameObject*>* enemies = GameObjectManager::getInstance()->getGameObjectsByTag("enemy");
+	for (int i = 0; i < enemies->size(); i++) {
+		enemies->at(i)->getDrawData()->getShader()->setVector4f("uColor", glm::vec4(0.125f, 0.4f, 0.95f, 1.0f), true);
+		Renderer::getInstance()->draw(*enemies->at(i), false);
+	}
+	delete enemies;
+}
+
+void Game::trimEnemies(){
+	std::vector<GameObject*>* enemies = GameObjectManager::getInstance()->getGameObjectsByTag("enemy");
+	for (int i = 0; i < enemies->size(); i++) {
+		if (enemies->at(i)->getIsHit()) {
+			GameObjectManager::getInstance()->removeGameObject(enemies->at(i));
+		}
+	}
+	delete enemies;
+}
+
 void Game::checkCollisions() {
+	std::vector<GameObject*>* enemies = GameObjectManager::getInstance()->getGameObjectsByTag("enemy");
 	bool foundCollision = false;
 	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
-	for (int i = 0; i < this->enemies->size(); i++) {
+	for (int i = 0; i < enemies->size(); i++) {
 		GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
-		bool collisionX = this->enemies->at(i)->getPositionX() + this->enemies->at(i)->getScaledSizeX() >= laserGameObject->getPositionX() && laserGameObject->getPositionX() + laserGameObject->getScaledSizeX() >= this->enemies->at(i)->getPositionX();
-		bool collisionY = this->enemies->at(i)->getPositionY() + this->enemies->at(i)->getScaledSizeY() >= laserGameObject->getPositionY() && laserGameObject->getPositionY() + laserGameObject->getScaledSizeY() >= this->enemies->at(i)->getPositionY();
+		bool collisionX = enemies->at(i)->getPositionX() + enemies->at(i)->getScaledSizeX() >= laserGameObject->getPositionX() && laserGameObject->getPositionX() + laserGameObject->getScaledSizeX() >= enemies->at(i)->getPositionX();
+		bool collisionY = enemies->at(i)->getPositionY() + enemies->at(i)->getScaledSizeY() >= laserGameObject->getPositionY() && laserGameObject->getPositionY() + laserGameObject->getScaledSizeY() >= enemies->at(i)->getPositionY();
 		if (collisionX && collisionY) {
 			this->soundEngine->play2D("assets\\sounds\\bleep.wav", false);
-			this->enemies->at(i)->setIsHit(true);
-			this->enemies->at(i)->setPositionX(9999.0f);
-			this->enemies->at(i)->setPositionY(9999.0f);
+			enemies->at(i)->setIsHit(true);
+			enemies->at(i)->setPositionX(9999.0f);
+			enemies->at(i)->setPositionY(9999.0f);
 			this->score++;
 			this->windowTitle = "Score: " + std::to_string(this->score);
 			glfwSetWindowTitle(this->window, this->windowTitle.c_str());
 			this->laserIsShooting = false;
 		}
 	}
+	delete enemies;
 }
 
 void Game::spawnEnemyProjectiles(float dt){
+	std::vector<GameObject*>* enemies = GameObjectManager::getInstance()->getGameObjectsByTag("enemy");
 	this->interval -= dt;
 	if (this->interval < 0) {
-		this->enemyIndexOfProjectile = rand() % this->enemies->size();
-		GameObject* bluRayGameObject = this->enemies->at(this->enemyIndexOfProjectile);
+		this->enemyIndexOfProjectile = rand() % enemies->size();
+		GameObject* bluRayGameObject = enemies->at(this->enemyIndexOfProjectile);
 		DrawData* projectileDrawData = ResourceManager::getInstance()->getDrawDataByName("projectileDrawData");
 		GameObject* projectileGameObject = GameObjectManager::getInstance()->addGameObject("projectileGameObject", "projectile", *projectileDrawData, bluRayGameObject->getPositionX(), bluRayGameObject->getPositionY() - bluRayGameObject->getScaledSizeY() / 2 - 20.0f,
 			25.0f, 25.0f, 1.0f, 0.0f, 0.0f, 300.0f, false);
-	
 		std::cout << "Spawned projectile!" << std::endl;
 		this->interval = this->intervals[rand() & 4];
 	}
-	//std::cout << this->interval << std::endl;
+	delete enemies;
 }
 void Game::trimEnemyProjectiles(float dt) {
 	std::vector<GameObject*>* projectiles = GameObjectManager::getInstance()->getGameObjectsByTag("projectile");

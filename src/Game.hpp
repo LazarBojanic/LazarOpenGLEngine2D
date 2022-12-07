@@ -43,7 +43,6 @@ private:
 
     int numberOfLines;
     int numberOfEnemiesPerLine;
-    std::vector<GameObject*>* enemies;
     int enemyIndexOfProjectile;
     float* intervals;
     float interval;
@@ -82,6 +81,7 @@ public:
     void initKeys();
     void spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine);
     void updateEnemies();
+    void trimEnemies();
     void updateWindowSize(int width, int height);
     void checkCollisions();
     void updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, float dt);
