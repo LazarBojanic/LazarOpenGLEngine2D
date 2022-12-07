@@ -72,6 +72,9 @@ void GameObjectManager::removeGameObject(GameObject* gameObject){
     delete this->gameObjectList;
     this->gameObjectList = tempGameObjectList;
 }
-void GameObjectManager::clear() {
+void GameObjectManager::clear(bool reinitialize) {
     delete this->gameObjectList;
+    if (reinitialize) {
+        this->gameObjectList = new std::vector<GameObject*>();
+    }
 }

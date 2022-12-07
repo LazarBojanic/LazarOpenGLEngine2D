@@ -4,7 +4,7 @@ Application::Application(unsigned int width, unsigned int height) {
     this->width = width;
     this->height = height;
     initWindow();
-    Game::getInstance(this->window, this->width, this->height)->init();
+    Game::getInstance(this->window, this->width, this->height)->start();
 }
 Application::~Application() {
     
@@ -66,13 +66,12 @@ void Application::run() {
         Game::getInstance()->processInput(deltaTime);
 
         Game::getInstance()->update(deltaTime);
-        Game::getInstance()->render(deltaTime);
 
         glfwPollEvents();
         glfwSwapBuffers(this->window);
     }
-    ResourceManager::getInstance()->clear();
-    GameObjectManager::getInstance()->clear();
+    ResourceManager::getInstance()->clear(false);
+    GameObjectManager::getInstance()->clear(false);
     Game::getInstance()->clear();
     glfwTerminate();
 }

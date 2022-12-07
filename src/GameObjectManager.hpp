@@ -23,6 +23,6 @@ public:
 	GameObject* getGameObjectByTag(std::string tag);
 	std::vector<GameObject*>* getGameObjectsByTag(std::string tag);
 	void removeGameObject(GameObject* gameObject);
-	void clear();
+	void clear(bool reinitialize);
 };
 

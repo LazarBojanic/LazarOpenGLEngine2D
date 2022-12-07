@@ -53,6 +53,8 @@ private:
 
     glm::vec4* colorsArray;
     int colorsArrayCount = 8;
+
+    float dvdDestructionDuration;
     
 public:
     Game(GLFWwindow* window, unsigned int width, unsigned int height);
@@ -61,10 +63,9 @@ public:
     static Game* getInstance();
     void initVariables();
     void initResources();
-    void init();
+    void start();
     void processInput(float dt);
     void update(float dt);
-    void render(float dt);
     void clear();
     GameState getGameState() {
         return this->gameState;
@@ -83,7 +84,7 @@ public:
     void updateEnemies();
     void trimEnemies();
     void updateWindowSize(int width, int height);
-    void checkCollisions();
+    void checkCollisions(float dt);
     void updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, float dt);
     void spawnEnemyProjectiles(float dt);
     void updateEnemyProjectiles(float dt);

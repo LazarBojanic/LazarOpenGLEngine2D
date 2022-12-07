@@ -42,5 +42,5 @@ public:
 	inline std::vector<DrawData*>* getDrawDataList() {
 		return this->drawDataList;
 	}
-	void clear();
+	void clear(bool reinitialize);
 };

@@ -90,8 +90,15 @@ DrawData* ResourceManager::getDrawDataByName(std::string name){
     }
     return nullptr;
 }
-void ResourceManager::clear() {
+void ResourceManager::clear(bool reinitialize) {
     delete this->meshList;
     delete this->shaderList;
     delete this->texture2DList;
+    delete this->drawDataList;
+    if (reinitialize) {
+        this->meshList = new std::vector<Mesh*>();
+        this->shaderList = new std::vector<Shader*>();
+        this->texture2DList = new std::vector<Texture2D*>();
+        this->drawDataList = new std::vector<DrawData*>();
+    }
 }
