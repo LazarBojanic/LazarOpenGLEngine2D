@@ -62,7 +62,7 @@ void Renderer::draw3DUntextured(GameObject3D& gameObject3D, bool scaled){
     }
     else {
         modelView = glm::scale(modelView, glm::vec3(gameObject3D.getScaledSizeX(), gameObject3D.getScaledSizeY(), gameObject3D.getScaledSizeZ()));
-    }    
+    }
     glm::mat4 perspectiveProjection = glm::perspective(glm::radians(45.0f), 800.0f / 640.0f, 0.1f, 100.0f);
 
     gameObject3D.getDrawData()->getMesh()->getVertexArray()->bind();

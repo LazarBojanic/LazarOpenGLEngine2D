@@ -4,7 +4,6 @@ Application::Application(unsigned int width, unsigned int height) {
     this->width = width;
     this->height = height;
     initWindow();
-    Game::getInstance(this->window, this->width, this->height)->start();
 }
 Application::~Application() {
     
@@ -15,7 +14,6 @@ void Application::initGlfw() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
 }
 void Application::initGlad() {
     gladLoadGL();
@@ -50,13 +48,14 @@ void Application::initWindow() {
     glfwSetKeyCallback(this->window, key_callback);
     glfwSetFramebufferSizeCallback(this->window, framebuffer_size_callback);
     glfwSwapInterval(1);
-    glfwSetWindowPos(this->window, 1080, 720);
+    glfwSetWindowPos(this->window, 600, 300);
     //glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Application::run() {
+    Game::getInstance(this->window, this->width, this->height)->start();
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
     while (!glfwWindowShouldClose(this->window)){

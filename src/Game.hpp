@@ -82,7 +82,7 @@ public:
     }
     void initKeys();
     void spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine);
-    void updateEnemies();
+    void updateEnemies(float dt);
     void trimEnemies();
     void updateWindowSize(int width, int height);
     void checkCollisions(float dt);
