@@ -6,6 +6,7 @@
 #include "Renderer.hpp"
 #include "Triangle.hpp"
 #include "Quad.hpp"
+#include "Cube.hpp"
 
 enum GameState {
     SCREEN_SAVER,

@@ -273,8 +273,10 @@
     <ClInclude Include="libraries\include\irrKlang\ik_SAudioStreamFormat.h" />
     <ClInclude Include="libraries\include\irrKlang\ik_vec3d.h" />
     <ClInclude Include="libraries\include\irrKlang\irrKlang.h" />
+    <ClInclude Include="src\Cube.hpp" />
     <ClInclude Include="src\DrawData.hpp" />
     <ClInclude Include="src\GameObject.hpp" />
+    <ClInclude Include="src\GameObject3D.hpp" />
     <ClInclude Include="src\IndexBuffer.hpp" />
     <ClInclude Include="src\Mesh.hpp" />
     <ClInclude Include="src\Application.hpp" />
@@ -584,6 +586,8 @@
     <None Include="assets\shaders\backgroundVertexShader.glsl" />
     <None Include="assets\shaders\bluRayFragmentShader.glsl" />
     <None Include="assets\shaders\bluRayVertexShader.glsl" />
+    <None Include="assets\shaders\cubeFragmentShader.glsl" />
+    <None Include="assets\shaders\cubeVertexShader.glsl" />
     <None Include="assets\shaders\dvdBurnFragmentShader.glsl" />
     <None Include="assets\shaders\dvdFragmentShader.glsl" />
     <None Include="assets\shaders\dvdVertexShader.glsl" />
@@ -734,6 +738,7 @@
   <ItemGroup>
     <ClCompile Include="src\DrawData.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\GameObject3D.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Game.cpp" />
