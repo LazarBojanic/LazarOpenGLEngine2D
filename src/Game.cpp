@@ -188,7 +188,7 @@ void Game::update(float dt) {
 	dvdGameObject->getDrawData()->getShader()->setFloat("uTime", glfwGetTime(), true);
 	
 	Renderer::getInstance()->colorBackground(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-	//Renderer::getInstance()->drawUntextured(*backgroundGameObject, true);
+	Renderer::getInstance()->drawUntextured(*backgroundGameObject, true);
 	if (this->gameState == SCREEN_SAVER) {
 		dvdGameObject->setPositionX(dvdGameObject->getPositionX() + dvdGameObject->getSpeedX() * dt);
 		dvdGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getSpeedY() * dt);
@@ -206,15 +206,15 @@ void Game::update(float dt) {
 			dvdGameObject->getDrawData()->getShader()->setVector4f("uColor", dvdColor, true);
 			dvdGameObject->setSpeedY(-dvdGameObject->getSpeedY());
 		}
-		//Renderer::getInstance()->draw(*dvdGameObject, true);
-		Renderer::getInstance()->draw3DUntextured(*cubeGameObject, true);
+		Renderer::getInstance()->draw(*dvdGameObject, true);
+		//Renderer::getInstance()->draw3DUntextured(*cubeGameObject, true);
 	}
 	else if (this->gameState == TRANSITION_TO_ACTIVE) {
 		dvdGameObject->setRotation(dvdGameObject->getRotation() + this->dvdRotationWhileTransitionSpeed * dt);
 		dvdGameObject->setScale(dvdGameObject->getScale() - ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaScale) * dt);
 		dvdGameObject->setPositionX(dvdGameObject->getPositionX() + ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaX) * dt);
 		dvdGameObject->setPositionY(dvdGameObject->getPositionY() + ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaY) * dt);
-		//Renderer::getInstance()->draw(*dvdGameObject, true);
+		Renderer::getInstance()->draw(*dvdGameObject, true);
 		if (glm::abs(dvdGameObject->getPositionX() - this->dvdDestinationX) <= 4.0f && glm::abs(dvdGameObject->getPositionY() - this->dvdDestinationY) <= 4.0f) {
 			this->gameState = ACTIVE;
 			dvdGameObject->setRotation(0.0f);
@@ -229,7 +229,7 @@ void Game::update(float dt) {
 		trimEnemyProjectiles(dt);
 		spawnEnemyProjectiles(dt);
 		updateEnemyProjectiles(dt);		
-		//Renderer::getInstance()->draw(*dvdGameObject, true);
+		Renderer::getInstance()->draw(*dvdGameObject, true);
 		updateLaser(*laserGameObject, *dvdGameObject, dt);
 		checkCollisions(dt);
 		if (dvdGameObject->getIsHit()) {
@@ -256,7 +256,7 @@ void Game::update(float dt) {
 		dvdGameObject->setScale(dvdGameObject->getScale() - ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaScale) * dt);
 		dvdGameObject->setPositionX(dvdGameObject->getPositionX() + ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaX) * dt);
 		dvdGameObject->setPositionY(dvdGameObject->getPositionY() + ((this->dvdTransitionSpeed / this->deltaVector) * this->deltaY) * dt);
-		//Renderer::getInstance()->draw(*dvdGameObject, true);
+		Renderer::getInstance()->draw(*dvdGameObject, true);
 		if (glm::abs(dvdGameObject->getPositionX() - this->dvdDestinationX) <= 4.0f && glm::abs(dvdGameObject->getPositionY() - this->dvdDestinationY) <= 4.0f) {
 			this->gameState = SCREEN_SAVER;
 			dvdGameObject->setScale(this->destinationScale);
@@ -279,7 +279,7 @@ void Game::clear() {
 void Game::updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, float dt) {
 	if (this->laserIsShooting) {
 		laserGameObject.setPositionY(laserGameObject.getPositionY() + laserGameObject.getSpeedY() * dt);
-		//Renderer::getInstance()->draw(laserGameObject, true);
+		Renderer::getInstance()->draw(laserGameObject, true);
 		if (laserGameObject.getPositionX() >= this->width || laserGameObject.getPositionX() <= 0 ||
 			laserGameObject.getPositionY() >= this->height || laserGameObject.getPositionY() <= 0) {
 			this->laserIsShooting = false;
@@ -310,7 +310,7 @@ void Game::updateEnemies() {
 	std::vector<GameObject*>* enemies = GameObjectManager::getInstance()->getGameObjectsByTag("enemy");
 	for (int i = 0; i < enemies->size(); i++) {
 		enemies->at(i)->getDrawData()->getShader()->setVector4f("uColor", glm::vec4(0.125f, 0.4f, 0.95f, 1.0f), true);
-		//Renderer::getInstance()->draw(*enemies->at(i), false);
+		Renderer::getInstance()->draw(*enemies->at(i), false);
 	}
 	delete enemies;
 }
@@ -393,7 +393,7 @@ void Game::updateEnemyProjectiles(float dt) {
 			projectiles->at(i)->setPositionY(projectiles->at(i)->getPositionY() - projectiles->at(i)->getSpeedY() * dt);
 			projectiles->at(i)->setRotation(projectiles->at(i)->getRotation() + 3500.0f * dt);
 			projectiles->at(i)->getDrawData()->getShader()->setFloat("uTime", glfwGetTime(), true);
-			//Renderer::getInstance()->drawUntextured(*projectiles->at(i), true);
+			Renderer::getInstance()->drawUntextured(*projectiles->at(i), true);
 		}
 	}
 	delete projectiles;

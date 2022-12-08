@@ -74,5 +74,5 @@ void Renderer::draw3DUntextured(GameObject3D& gameObject3D, bool scaled){
 
 void Renderer::colorBackground(glm::vec4 color) {
     glClearColor(color.x, color.y, color.z, color.w);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT/* | GL_DEPTH_BUFFER_BIT*/);
 }
