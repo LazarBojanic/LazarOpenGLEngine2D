@@ -92,12 +92,12 @@ void Game::initResources() {
 	Mesh* laserMesh = ResourceManager::getInstance()->addMesh(*quad, "laserMesh", 0, 3, 1, 3, 2, 2);
 	Mesh* cubeMesh = ResourceManager::getInstance()->addMesh(*cube, "cubeMesh", 0, 3, 1, 3, 2, 2);
 	
-	Shader* projectileShader = ResourceManager::getInstance()->addShader("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleFragmentShader.glsl", "projectileShader");
-	Shader* dvdShader = ResourceManager::getInstance()->addShader("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\dvdVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\dvdBurnFragmentShader.glsl", "dvdShader");
-	Shader* backgroundShader = ResourceManager::getInstance()->addShader("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\backgroundVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\backgroundFragmentShader.glsl", "backgroundShader");
-	Shader* bluRayShader = ResourceManager::getInstance()->addShader("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\bluRayVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\bluRayFragmentShader.glsl", "bluRayShader");
-	Shader* laserShader = ResourceManager::getInstance()->addShader("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\laserVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\laserFragmentShader.glsl", "laserShader");
-	Shader* cubeShader = ResourceManager::getInstance()->addShader("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\cubeVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\cubeFragmentShader.glsl", "cubeShader");
+	Shader* projectileShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleFragmentShader.glsl", "projectileShader");
+	Shader* dvdShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\dvdVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\dvdBurnFragmentShader.glsl", "dvdShader");
+	Shader* backgroundShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\backgroundVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\backgroundFragmentShader.glsl", "backgroundShader");
+	Shader* bluRayShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\bluRayVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\bluRayFragmentShader.glsl", "bluRayShader");
+	Shader* laserShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\laserVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\laserFragmentShader.glsl", "laserShader");
+	Shader* cubeShader = ResourceManager::getInstance()->addShader("D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\cubeVertexShader.glsl", "D:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\cubeFragmentShader.glsl", "cubeShader");
 
 	projectileShader->setMatrix4f("uProjection", orthographicProjection, true);
 
@@ -119,9 +119,9 @@ void Game::initResources() {
 	
 	
 
-	Texture2D* dvdTexture = ResourceManager::getInstance()->addTexture2D("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\textures\\dvdLogo.png", true, "dvdTexture");
-	Texture2D* bluRayTexture = ResourceManager::getInstance()->addTexture2D("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\textures\\bluRayLogo.png", true, "bluRayTexture");
-	Texture2D* laserTexture = ResourceManager::getInstance()->addTexture2D("C:\\CPP\\LazarOpenGLEngineOOP\\assets\\textures\\laser.png", true, "laserTexture");
+	Texture2D* dvdTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\textures\\dvdLogo.png", true, "dvdTexture");
+	Texture2D* bluRayTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\textures\\bluRayLogo.png", true, "bluRayTexture");
+	Texture2D* laserTexture = ResourceManager::getInstance()->addTexture2D("D:\\CPP\\LazarOpenGLEngineOOPBetterAbstraction\\assets\\textures\\laser.png", true, "laserTexture");
 
 	ResourceManager::getInstance()->addDrawData("projectileDrawData", *projectileMesh, *projectileShader, *laserTexture);
 	ResourceManager::getInstance()->addDrawData("bluRayDrawData", *bluRayMesh, *bluRayShader, *bluRayTexture);
