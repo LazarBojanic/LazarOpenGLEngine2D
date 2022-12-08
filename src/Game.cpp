@@ -64,8 +64,8 @@ void Game::initVariables() {
 	this->destinationScale = 0.4f;
 	this->deltaScale = 1.0f;
 
-	this->numberOfLines = 1;
-	this->numberOfEnemiesPerLine = 4;
+	this->numberOfLines = 3;
+	this->numberOfEnemiesPerLine = 6;
 	this->enemyIndexOfProjectile = 0;
 	this->intervals = new float[4] {
 		2.0f, 4.0, 6.0f, 8.0f
@@ -123,7 +123,6 @@ void Game::initResources() {
 	GameObjectManager::getInstance()->addGameObject("laserGameObject", "laser", * laserMesh, *laserShader, *laserTexture, 9999.0f, 9999.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
 	GameObjectManager::getInstance()->addGameObject("dvdGameObject", "dvd", *dvdMesh, *dvdShader, *dvdTexture, this->width / 2 + 50.0f, this->height / 2 + 50.0f, 160.0f, 120.0f, 1.0f, 0.0f, 200.0f, 200.0f, false);
 	GameObjectManager::getInstance()->addGameObject("backgroundGameObject", "background", *backgroundMesh, *backgroundShader, *dvdTexture, this->width / 2, this->height / 2, this->width, this->height, 1.0f, 0.0f, 0.0f, 0.0f, false);
-	GameObjectManager::getInstance()->addGameObject("bluRayGameObject", "bluRay", *bluRayMesh, *bluRayShader, *bluRayTexture, 60.0f, this->height - 45.0f, 80.0f, 60.0f, 1.0f, 0.0f, 0.0f, 0.0f, false);
 }
 void Game::start() {
 	initVariables();
@@ -272,8 +271,7 @@ void Game::update(float dt) {
 	else if (this->gameState == LOSS) {
 		this->windowTitle = "Game Over, Press 'R' To Restart Game";
 		glfwSetWindowTitle(this->window, this->windowTitle.c_str());
-		std::cout << "Game Over, Press 'R' To Restart Game" << std::endl;
-		//processInput(dt);
+		//std::cout << "Game Over, Press 'R' To Restart Game" << std::endl;
 	}
 	delete enemies;
 }
@@ -363,7 +361,7 @@ void Game::spawnEnemyProjectiles(float dt){
 		DrawData* projectileDrawData = ResourceManager::getInstance()->getDrawDataByName("projectileDrawData");
 		GameObject* projectileGameObject = GameObjectManager::getInstance()->addGameObject("projectileGameObject", "projectile", *projectileDrawData, bluRayGameObject->getPositionX(), bluRayGameObject->getPositionY() - bluRayGameObject->getScaledSizeY() / 2 - 20.0f,
 			25.0f, 25.0f, 1.0f, 0.0f, 0.0f, 300.0f, false);
-		std::cout << "Spawned projectile!" << std::endl;
+		//std::cout << "Spawned projectile!" << std::endl;
 		this->interval = this->intervals[rand() & 4];
 	}
 	delete enemies;
