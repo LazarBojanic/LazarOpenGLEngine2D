@@ -271,7 +271,6 @@ void Game::update(float dt) {
 	else if (this->gameState == LOSS) {
 		this->windowTitle = "Game Over, Press 'R' To Restart Game";
 		glfwSetWindowTitle(this->window, this->windowTitle.c_str());
-		//std::cout << "Game Over, Press 'R' To Restart Game" << std::endl;
 	}
 	delete enemies;
 }
@@ -361,7 +360,6 @@ void Game::spawnEnemyProjectiles(float dt){
 		DrawData* projectileDrawData = ResourceManager::getInstance()->getDrawDataByName("projectileDrawData");
 		GameObject* projectileGameObject = GameObjectManager::getInstance()->addGameObject("projectileGameObject", "projectile", *projectileDrawData, bluRayGameObject->getPositionX(), bluRayGameObject->getPositionY() - bluRayGameObject->getScaledSizeY() / 2 - 20.0f,
 			25.0f, 25.0f, 1.0f, 0.0f, 0.0f, 300.0f, false);
-		//std::cout << "Spawned projectile!" << std::endl;
 		this->interval = this->intervals[rand() & 4];
 	}
 	delete enemies;
@@ -380,12 +378,10 @@ void Game::trimEnemyProjectiles(float dt) {
 }
 void Game::updateEnemyProjectiles(float dt) {
 	std::vector<GameObject*>* projectiles = GameObjectManager::getInstance()->getGameObjectsByTag("projectile");
-	//std::cout << projectiles->size() << std::endl;
 	if (projectiles->size() > 0) {
 		for (int i = 0; i < projectiles->size(); i++) {
 			projectiles->at(i)->setPositionY(projectiles->at(i)->getPositionY() - projectiles->at(i)->getSpeedY() * dt);
 			projectiles->at(i)->setRotation(projectiles->at(i)->getRotation() + 3500.0f * dt);
-			//std::cout << projectiles->at(i)->getRotation() << std::endl;
 			projectiles->at(i)->getDrawData()->getShader()->setFloat("uTime", glfwGetTime(), true);
 			Renderer::getInstance()->drawUntextured(*projectiles->at(i), true);
 		}
