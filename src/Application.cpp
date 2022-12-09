@@ -11,9 +11,10 @@ Application::~Application() {
 
 void Application::initGlfw() {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 }
 void Application::initGlad() {
     gladLoadGL();
@@ -35,6 +36,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
     }
 }
+void GLAPIENTRY debugCallback(GLenum source,
+    GLenum type,
+    GLuint id,
+    GLenum severity,
+    GLsizei length,
+    const GLchar* message,
+    const void* userParam){
+    std::cout << "GL CALLBACK-> Type: " << type << "Severity: " << severity << "Message: " << message << std::endl;
+}
 void Application::initWindow() {
     initGlfw();
     this->window = glfwCreateWindow(this->width, this->height, "DVD Game", NULL, NULL);
@@ -45,6 +55,8 @@ void Application::initWindow() {
     }
     glfwMakeContextCurrent(this->window);
     initGlad();
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(debugCallback, 0);
     glfwSetKeyCallback(this->window, key_callback);
     glfwSetFramebufferSizeCallback(this->window, framebuffer_size_callback);
     glfwSwapInterval(1);

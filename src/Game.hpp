@@ -91,4 +91,6 @@ public:
     void spawnEnemyProjectiles(float dt);
     void updateEnemyProjectiles(float dt);
     void trimEnemyProjectiles(float dt);
+    void addDot(float dt);
+    void updateDots(float dt);
 };

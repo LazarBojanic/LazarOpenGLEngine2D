@@ -90,13 +90,18 @@ void Game::initResources() {
 	Mesh* backgroundMesh = ResourceManager::getInstance()->addMesh(*quad, "backgroundMesh", 0, 3, 1, 3, 2, 2);
 	Mesh* bluRayMesh = ResourceManager::getInstance()->addMesh(*quad, "bluRayMesh", 0, 3, 1, 3, 2, 2);
 	Mesh* laserMesh = ResourceManager::getInstance()->addMesh(*quad, "laserMesh", 0, 3, 1, 3, 2, 2);
+
+	Mesh* dotMesh = ResourceManager::getInstance()->addMesh(*quad, "dotMesh", 0, 3, 1, 3, 2, 2);
 	//Mesh* cubeMesh = ResourceManager::getInstance()->addMesh(*cube, "cubeMesh", 0, 3, 1, 3, 2, 2);
 	
-	Shader* projectileShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\triangleVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\triangleFragmentShader.glsl", "projectileShader");
-	Shader* dvdShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\dvdVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\dvdBurnFragmentShader.glsl", "dvdShader");
-	Shader* backgroundShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\backgroundVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\backgroundFragmentShader.glsl", "backgroundShader");
-	Shader* bluRayShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\bluRayVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\bluRayFragmentShader.glsl", "bluRayShader");
-	Shader* laserShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\laserVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\laserFragmentShader.glsl", "laserShader");
+	Shader* projectileShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\triangleVertexShader.glsl", workingDirectory + "\\assets\\shaders\\triangleFragmentShader.glsl", "projectileShader");
+	Shader* dvdShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\dvdVertexShader.glsl", workingDirectory + "\\assets\\shaders\\dvdBurnFragmentShader.glsl", "dvdShader");
+	Shader* backgroundShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\backgroundVertexShader.glsl", workingDirectory + "\\assets\\shaders\\backgroundFragmentShader.glsl", "backgroundShader");
+	Shader* bluRayShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\bluRayVertexShader.glsl", workingDirectory + "\\assets\\shaders\\bluRayFragmentShader.glsl", "bluRayShader");
+	Shader* laserShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\laserVertexShader.glsl", workingDirectory + "\\assets\\shaders\\laserFragmentShader.glsl", "laserShader");
+
+	Shader* dotShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\genericVertexShader.glsl", workingDirectory + "\\assets\\shaders\\genericFragmentShader.glsl", "dotShader");
+
 	//Shader* cubeShader = ResourceManager::getInstance()->addShader(workingDirectory + "\\assets\\shaders\\cubeVertexShader.glsl", "C:\\CPP\\LazarOpenGLEngineOOP\\assets\\shaders\\cubeFragmentShader.glsl", "cubeShader");
 
 	projectileShader->setMatrix4f("uProjection", orthographicProjection, true);
@@ -116,6 +121,9 @@ void Game::initResources() {
 
 	laserShader->setMatrix4f("uProjection", orthographicProjection, true);
 	laserShader->setInt("uTexture", 0, true);
+
+	dotShader->setMatrix4f("uProjection", orthographicProjection, true);
+	dotShader->setVector4f("uColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true);
 	
 	Texture2D* dvdTexture = ResourceManager::getInstance()->addTexture2D(workingDirectory + "\\assets\\textures\\dvdLogo.png", true, "dvdTexture");
 	Texture2D* bluRayTexture = ResourceManager::getInstance()->addTexture2D(workingDirectory + "\\assets\\textures\\bluRayLogo.png", true, "bluRayTexture");
@@ -123,6 +131,7 @@ void Game::initResources() {
 
 	ResourceManager::getInstance()->addDrawData("projectileDrawData", *projectileMesh, *projectileShader, *laserTexture);
 	ResourceManager::getInstance()->addDrawData("bluRayDrawData", *bluRayMesh, *bluRayShader, *bluRayTexture);
+	ResourceManager::getInstance()->addDrawData("dotDrawData", *dotMesh, *dotShader, *dvdTexture);
 
 	GameObjectManager::getInstance()->addGameObject("laserGameObject", "laser", * laserMesh, *laserShader, *laserTexture, 9999.0f, 9999.0f, 20.0f, 15.0f, 1.0f, 0.0f, 0.0f, 450.0f, false);
 	GameObjectManager::getInstance()->addGameObject("dvdGameObject", "dvd", *dvdMesh, *dvdShader, *dvdTexture, this->width / 2, this->height / 2, 160.0f , 120.0f, 1.0f, 0.0f, 200.0f, 200.0f, false);
@@ -176,10 +185,10 @@ void Game::processInput(float dt) {
 	}
 }
 void Game::update(float dt) {
-	std::cout << this->width << " : " << this->height << std::endl;
 	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
 	GameObject* backgroundGameObject = GameObjectManager::getInstance()->getGameObjectByName("backgroundGameObject");
 	GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
+
 	std::vector<GameObject*>* enemies = GameObjectManager::getInstance()->getGameObjectsByTag("enemy");
 	backgroundGameObject->getDrawData()->getShader()->setFloat("uTime", glfwGetTime(), true);
 	dvdGameObject->getDrawData()->getShader()->setFloat("uTime", glfwGetTime(), true);
@@ -224,7 +233,8 @@ void Game::update(float dt) {
 			dvdGameObject->setSpeedY(-dvdGameObject->getSpeedY());
 		}
 		Renderer::getInstance()->draw(*dvdGameObject, true);
-		DrawData* drawData = ResourceManager::getInstance()->getDrawDataByName("projectileDrawData");
+		/*addDot(dt);
+		updateDots(dt);*/
 	}
 	else if (this->gameState == TRANSITION_TO_ACTIVE) {
 		dvdGameObject->setRotation(dvdGameObject->getRotation() + this->dvdRotationWhileTransitionSpeed * dt);
@@ -417,4 +427,15 @@ void Game::updateEnemyProjectiles(float dt) {
 		}
 	}
 	delete projectiles;
+}
+void Game::addDot(float dt){
+	DrawData* dotDrawData = ResourceManager::getInstance()->getDrawDataByName("dotDrawData");
+	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
+	GameObjectManager::getInstance()->addGameObject("dot", "dot", *dotDrawData, dvdGameObject->getPositionX(), dvdGameObject->getPositionY(), 5.0f, 5.0f, 1.0f, 0.0f, 0.0f, 0.0f, false);
+}
+void Game::updateDots(float dt){
+	std::vector<GameObject*>* dots = GameObjectManager::getInstance()->getGameObjectsByTag("dot");
+	for (int i = 0; i < dots->size(); i++) {
+		Renderer::getInstance()->drawUntextured(*dots->at(i), true);
+	}
 }

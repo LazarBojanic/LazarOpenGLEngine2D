@@ -526,6 +526,8 @@
     <None Include="assets\shaders\dvdVertexShader.glsl" />
     <None Include="assets\shaders\fireFragmentShader.glsl" />
     <None Include="assets\shaders\circleShader.glsl" />
+    <None Include="assets\shaders\genericFragmentShader.glsl" />
+    <None Include="assets\shaders\genericVertexShader.glsl" />
     <None Include="assets\shaders\laserFragmentShader.glsl" />
     <None Include="assets\shaders\laserVertexShader.glsl" />
     <None Include="assets\shaders\triangleFragmentShader.glsl" />
