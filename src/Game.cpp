@@ -77,6 +77,16 @@ void Game::initVariables() {
 
 	this->score = 0;
 	this->dvdDestructionDuration = 2.0f;
+
+	this->lowerBound = -0.5f * PI;
+	this->upperBound = 1.5f * PI;
+
+	this->t = this->lowerBound;
+
+	this->infinityPositionsCount = 392;
+	this->infinityPositions = new std::vector<glm::vec2*>();
+	this->currentInfinityPosition = 0;
+	addDots(1.0f);
 }
 void Game::initResources() {
 	glm::mat4 orthographicProjection = glm::ortho(0.0f, (float)this->width, 0.0f, (float)this->height, -1.0f, 1.0f);
@@ -185,6 +195,7 @@ void Game::processInput(float dt) {
 	}
 }
 void Game::update(float dt) {
+	//std::cout << dt << std::endl;
 	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
 	GameObject* backgroundGameObject = GameObjectManager::getInstance()->getGameObjectByName("backgroundGameObject");
 	GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
@@ -233,8 +244,6 @@ void Game::update(float dt) {
 			dvdGameObject->setSpeedY(-dvdGameObject->getSpeedY());
 		}
 		Renderer::getInstance()->draw(*dvdGameObject, true);
-		/*addDot(dt);
-		updateDots(dt);*/
 	}
 	else if (this->gameState == TRANSITION_TO_ACTIVE) {
 		dvdGameObject->setRotation(dvdGameObject->getRotation() + this->dvdRotationWhileTransitionSpeed * dt);
@@ -263,6 +272,7 @@ void Game::update(float dt) {
 			this->dvdDestructionDuration -= dt;
 			if (this->dvdDestructionDuration < 0) {
 				this->gameState = LOSS;
+				dvdGameObject->getDrawData()->getShader()->setBool("uDestroyed", false, true);
 			}
 		}
 		if (this->score == enemies->size()) {
@@ -296,6 +306,12 @@ void Game::update(float dt) {
 	else if (this->gameState == LOSS) {
 		this->windowTitle = "Game Over, Press 'R' To Restart Game";
 		glfwSetWindowTitle(this->window, this->windowTitle.c_str());
+		float currentInfinityPositionX = this->infinityPositions->at(this->currentInfinityPosition % this->infinityPositionsCount)->x;
+		float currentInfinityPositionY = this->infinityPositions->at(this->currentInfinityPosition % this->infinityPositionsCount)->y;
+		dvdGameObject->setPositionX(currentInfinityPositionX);
+		dvdGameObject->setPositionY(currentInfinityPositionY);
+		Renderer::getInstance()->draw(*dvdGameObject, true);
+		this->currentInfinityPosition++;
 	}
 	delete enemies;
 }
@@ -428,14 +444,22 @@ void Game::updateEnemyProjectiles(float dt) {
 	}
 	delete projectiles;
 }
-void Game::addDot(float dt){
+void Game::addDots(float dt){
 	DrawData* dotDrawData = ResourceManager::getInstance()->getDrawDataByName("dotDrawData");
 	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
-	GameObjectManager::getInstance()->addGameObject("dot", "dot", *dotDrawData, dvdGameObject->getPositionX(), dvdGameObject->getPositionY(), 5.0f, 5.0f, 1.0f, 0.0f, 0.0f, 0.0f, false);
-}
-void Game::updateDots(float dt){
-	std::vector<GameObject*>* dots = GameObjectManager::getInstance()->getGameObjectsByTag("dot");
-	for (int i = 0; i < dots->size(); i++) {
-		Renderer::getInstance()->drawUntextured(*dots->at(i), true);
+	for (int i = 0; i < this->infinityPositionsCount; i++) {
+		float currentPositionX = ((glm::cos(t) + 1.0f) / 2.0f) * this->width;
+		float currentPositionY = ((glm::sin(t) * glm::cos(t) + 1.0f) / 2.0f) * this->height;
+		this->infinityPositions->push_back(new glm::vec2(currentPositionX, currentPositionY));
+		float speed = 0.016f;
+		if (this->t > this->upperBound) {
+			this->t = this->upperBound;
+			speed = -speed;
+		}
+		if (this->t < this->lowerBound) {
+			this->t = this->lowerBound;
+			speed = -speed;
+		}
+		this->t += speed;
 	}
 }

@@ -57,6 +57,16 @@ private:
     int colorsArrayCount = 8;
 
     float dvdDestructionDuration;
+
+    float lowerBound, upperBound;
+
+    float t;
+
+    std::vector<glm::vec2*>* infinityPositions;
+    int infinityPositionsCount;
+
+    int currentInfinityPosition;
+
     
 public:
     Game(GLFWwindow* window, unsigned int width, unsigned int height);
@@ -91,6 +101,5 @@ public:
     void spawnEnemyProjectiles(float dt);
     void updateEnemyProjectiles(float dt);
     void trimEnemyProjectiles(float dt);
-    void addDot(float dt);
-    void updateDots(float dt);
+    void addDots(float dt);
 };

@@ -29,6 +29,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#define PI 3.141592
+
 class GLData {
 public:
 	static float* copyFloatArray(float* source, unsigned int sourceSize) {
