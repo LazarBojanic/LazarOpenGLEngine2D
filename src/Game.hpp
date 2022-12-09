@@ -18,8 +18,9 @@ enum GameState {
 
 class Game {
 private:
+    std::string workingDirectory;
     GLFWwindow* window;
-    ISoundEngine* soundEngine;
+    irrklang::ISoundEngine* soundEngine;
     std::string windowTitle;
     static Game* instance;
     GameState gameState;
