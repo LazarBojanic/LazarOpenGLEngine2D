@@ -191,7 +191,6 @@ void Game::update(float dt) {
 		glm::vec4 dvdColor = glm::vec4(1.0f);
 		dvdGameObject->setPositionX(dvdGameObject->getPositionX() + dvdGameObject->getSpeedX() * dt);
 		dvdGameObject->setPositionY(dvdGameObject->getPositionY() + dvdGameObject->getSpeedY() * dt);
-
 		if (dvdGameObject->getPositionX() + dvdGameObject->getScaledSizeX() / 2.0f >= this->width) {
 			colorIndex = rand() % 8;
 			dvdColor = this->colorsArray[colorIndex];
@@ -208,7 +207,6 @@ void Game::update(float dt) {
 			dvdGameObject->setPositionX(0.0f + (dvdGameObject->getScaledSizeX() / 2.0f));
 			dvdGameObject->setSpeedX(-dvdGameObject->getSpeedX());
 		}
-		
 		if (dvdGameObject->getPositionY() + (dvdGameObject->getScaledSizeY() / 2.0f) >= this->height) {
 			colorIndex = rand() % 8;
 			dvdColor = this->colorsArray[colorIndex];
