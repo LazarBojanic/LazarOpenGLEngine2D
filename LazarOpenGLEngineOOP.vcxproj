@@ -532,6 +532,7 @@
     <None Include="assets\shaders\laserVertexShader.glsl" />
     <None Include="assets\shaders\triangleFragmentShader.glsl" />
     <None Include="assets\shaders\triangleVertexShader.glsl" />
+    <None Include="assets\shaders\testFragmentShader.glsl" />
     <None Include="libraries\include\glm\detail\func_common.inl" />
     <None Include="libraries\include\glm\detail\func_common_simd.inl" />
     <None Include="libraries\include\glm\detail\func_exponential.inl" />

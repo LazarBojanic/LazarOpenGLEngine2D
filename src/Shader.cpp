@@ -18,6 +18,7 @@ Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath, std
 	createProgramAndAttachShaders(this->vertexShaderID, this->fragmentShaderID);
 }
 Shader::~Shader() {
+	//glDeleteProgram(this->shaderProgram);
 }
 std::string Shader::loadShaderSource(std::string shaderPath) {
 	std::string shaderSource;
