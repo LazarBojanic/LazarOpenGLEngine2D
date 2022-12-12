@@ -65,8 +65,8 @@ void Game::initVariables() {
 	this->destinationScale = 0.4f;
 	this->deltaScale = 1.0f;
 
-	this->numberOfLines = 4;
-	this->numberOfEnemiesPerLine = 8;
+	this->numberOfLines = 5;
+	this->numberOfEnemiesPerLine = 16;
 	this->enemyIndexOfProjectile = 0;
 	this->intervals = new float[4] {
 		2.0f, 4.0, 6.0f, 8.0f
@@ -271,11 +271,11 @@ void Game::update(float dt) {
 		}
 	}
 	else if (this->gameState == ACTIVE) {
-		if (dvdGameObject->getPositionX() - (dvdGameObject->getScaledSizeX() / 2.0f) <= 0.0f) {
-			dvdGameObject->setPositionX(0.0f + (dvdGameObject->getScaledSizeX() / 2.0f));
+		if (dvdGameObject->getPositionX() <= 0.0f) {
+			dvdGameObject->setPositionX(0.0f);
 		}
-		if (dvdGameObject->getPositionX() + (dvdGameObject->getScaledSizeX() / 2.0f) >= this->width) {
-			dvdGameObject->setPositionX(this->width - (dvdGameObject->getScaledSizeX() / 2.0f));
+		if (dvdGameObject->getPositionX() >= this->width) {
+			dvdGameObject->setPositionX(this->width);
 		}
 		Renderer::getInstance()->draw(*dvdGameObject, true);
 		updateEnemies(dt);
@@ -332,6 +332,12 @@ void Game::update(float dt) {
 		float currentInfinityPositionY = this->infinityPositions->at(this->currentInfinityPosition % this->infinityPositionsCount)->y;
 		dvdGameObject->setPositionX(currentInfinityPositionX);
 		dvdGameObject->setPositionY(currentInfinityPositionY);
+
+		float x = glfwGetTime();
+		float red = glm::clamp((glm::sin(x) + 1.0f) / 2.0f, 0.5f, 1.0f);
+		float blue = glm::clamp((glm::cos(x) + 1.0f) / 2.0f, 0.5f, 1.0f);
+		dvdGameObject->getDrawData()->getShader()->setVector4f("uColor", glm::vec4(red, 0.0f, blue, 1.0f), true);
+
 		Renderer::getInstance()->draw(*dvdGameObject, true);
 		this->currentInfinityPosition++;
 	}
@@ -421,7 +427,7 @@ void Game::checkCollisions(float dt) {
 				bool collisionX = enemies->at(i)->getPositionX() + enemies->at(i)->getScaledSizeX() >= lasers->at(j)->getPositionX() && lasers->at(j)->getPositionX() + lasers->at(j)->getScaledSizeX() >= enemies->at(i)->getPositionX();
 				bool collisionY = enemies->at(i)->getPositionY() + enemies->at(i)->getScaledSizeY() >= lasers->at(j)->getPositionY() && lasers->at(j)->getPositionY() + lasers->at(j)->getScaledSizeY() >= enemies->at(i)->getPositionY();
 				if (collisionX && collisionY) {
-					this->soundEngine->setSoundVolume(1.0f);
+					this->soundEngine->setSoundVolume(0.1f);
 					this->soundEngine->play2D("assets\\sounds\\bleep.wav", false);
 					
 					enemies->at(i)->setIsHit(true);
