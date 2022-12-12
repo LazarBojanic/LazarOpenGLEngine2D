@@ -65,8 +65,8 @@ void Game::initVariables() {
 	this->destinationScale = 0.4f;
 	this->deltaScale = 1.0f;
 
-	this->numberOfLines = 1;
-	this->numberOfEnemiesPerLine = 3;
+	this->numberOfLines = 3;
+	this->numberOfEnemiesPerLine = 8;
 	this->enemyIndexOfProjectile = 0;
 	this->intervals = new float[4] {
 		2.0f, 4.0, 6.0f, 8.0f
@@ -330,18 +330,33 @@ void Game::updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, f
 }
 void Game::spawnEnemies(int numberOfLines, int numberOfEnemiesPerLine) {
 	DrawData* bluRayDrawData = ResourceManager::getInstance()->getDrawDataByName("bluRayDrawData");
-	float bluRaySizeX = 60.0f;
-	float bluRaySizeY = 45.0f;
-	float initialEnemyX = 60.0f;
-	float currentEnemyX = 60.0f;
-	float currentEnemyY = this->height - 45.0f;
+	float section = (float)this->width / numberOfEnemiesPerLine;
+
+	float percentOfSizeX = 0.5f;
+	float percentOfGapX = 0.25f;
+	float remainingPercentage = 1 - percentOfSizeX - (percentOfGapX * 2);
+
+	float bluRaySizeX = section * percentOfSizeX;
+	float bluRaySizeY = bluRaySizeX * 0.75f;
+
+	float gapSizeX = section * percentOfGapX;
+	float gapSizeY = bluRaySizeY * 0.25f;
+
+	float distanceX = bluRaySizeX + (gapSizeX * 2);
+	float distanceY = bluRaySizeY + (gapSizeY * 2);
+
+	float emptySpaceInGap = (section * remainingPercentage) / 2.0f;
+	float initialEnemyX = (bluRaySizeX / 2.0f) + gapSizeX + emptySpaceInGap;
+	float currentEnemyX = initialEnemyX;
+	float currentEnemyY = this->height - (bluRaySizeY / 2.0f) - gapSizeY;
+
 	for (int i = 0; i < numberOfLines; i++) {
 		for (int j = 0; j < numberOfEnemiesPerLine; j++) {
 			GameObjectManager::getInstance()->addGameObject("enemy" + std::to_string(i * numberOfEnemiesPerLine + j), "enemy", *bluRayDrawData, currentEnemyX, currentEnemyY, bluRaySizeX, bluRaySizeY, 1.0f, 0.0f, 0.0f, 10.0f, false);
-			currentEnemyX += (bluRaySizeX * 2.2f);
+			currentEnemyX += distanceX + (emptySpaceInGap * 2);
 		}
 		currentEnemyX = initialEnemyX;
-		currentEnemyY -= (bluRaySizeY * 1.5f);
+		currentEnemyY -= distanceY;
 	}
 }
 void Game::updateEnemies(float dt) {
@@ -371,9 +386,12 @@ void Game::checkCollisions(float dt) {
 	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
 	GameObject* laserGameObject = GameObjectManager::getInstance()->getGameObjectByName("laserGameObject");
 	for (int i = 0; i < enemies->size(); i++) {
+		/*bool collisionX = enemies->at(i)->getPositionX() + (enemies->at(i)->getScaledSizeX() / 2.0f) >= laserGameObject->getPositionX() - (laserGameObject->getScaledSizeX() / 2.0f) && laserGameObject->getPositionX() - (laserGameObject->getScaledSizeX() / 2.0f) <= enemies->at(i)->getPositionX() + (laserGameObject->getScaledSizeX() / 2.0f);
+		bool collisionY = enemies->at(i)->getPositionY() - (enemies->at(i)->getScaledSizeY() / 2.0f) <= laserGameObject->getPositionY() + (laserGameObject->getScaledSizeY() / 2.0f) && laserGameObject->getPositionY() + (laserGameObject->getScaledSizeY() / 2.0f) >= enemies->at(i)->getPositionY() - (laserGameObject->getScaledSizeY() / 2.0f);*/
 		bool collisionX = enemies->at(i)->getPositionX() + enemies->at(i)->getScaledSizeX() >= laserGameObject->getPositionX() && laserGameObject->getPositionX() + laserGameObject->getScaledSizeX() >= enemies->at(i)->getPositionX();
 		bool collisionY = enemies->at(i)->getPositionY() + enemies->at(i)->getScaledSizeY() >= laserGameObject->getPositionY() && laserGameObject->getPositionY() + laserGameObject->getScaledSizeY() >= enemies->at(i)->getPositionY();
 		if (collisionX && collisionY) {
+			this->soundEngine->setSoundVolume(1.0f);
 			this->soundEngine->play2D("assets\\sounds\\bleep.wav", false);
 			enemies->at(i)->setIsHit(true);
 			enemies->at(i)->setPositionX(9999.0f);
@@ -383,12 +401,20 @@ void Game::checkCollisions(float dt) {
 			glfwSetWindowTitle(this->window, this->windowTitle.c_str());
 			this->laserIsShooting = false;
 		}
+		if (enemies->at(i)->getPositionY() - (enemies->at(i)->getScaledSizeY() / 2.0f) <= 0) {
+			this->gameState = LOSS;
+			return;
+		}
 	}
 	if (projectiles->size() > 0) {
 		for (int i = 0; i < projectiles->size(); i++) {
+			/*bool collisionX = projectiles->at(i)->getPositionX() + (projectiles->at(i)->getScaledSizeX() / 2.0f) >= dvdGameObject->getPositionX() - (dvdGameObject->getScaledSizeX() / 2.0f) && dvdGameObject->getPositionX() - (dvdGameObject->getScaledSizeX() / 2.0f) <= projectiles->at(i)->getPositionX() + (dvdGameObject->getScaledSizeX() / 2.0f);
+			bool collisionY = projectiles->at(i)->getPositionY() - (projectiles->at(i)->getScaledSizeY() / 2.0f) <= dvdGameObject->getPositionY() + (dvdGameObject->getScaledSizeY() / 2.0f) && dvdGameObject->getPositionY() + (dvdGameObject->getScaledSizeY() / 2.0f) >= projectiles->at(i)->getPositionY() - (dvdGameObject->getScaledSizeY() / 2.0f);*/
 			bool collisionX = projectiles->at(i)->getPositionX() + projectiles->at(i)->getScaledSizeX() >= dvdGameObject->getPositionX() && dvdGameObject->getPositionX() + dvdGameObject->getScaledSizeX() >= projectiles->at(i)->getPositionX();
 			bool collisionY = projectiles->at(i)->getPositionY() + projectiles->at(i)->getScaledSizeY() >= dvdGameObject->getPositionY() && dvdGameObject->getPositionY() + dvdGameObject->getScaledSizeY() >= projectiles->at(i)->getPositionY();
 			if (collisionX && collisionY) {
+				this->soundEngine->setSoundVolume(0.1f);
+				this->soundEngine->play2D("assets\\sounds\\lose.wav", false);
 				dvdGameObject->setIsHit(true);
 				dvdGameObject->getDrawData()->getShader()->setFloat("uStartTime", glfwGetTime(), true);
 				dvdGameObject->getDrawData()->getShader()->setBool("uDestroyed", true, true);
