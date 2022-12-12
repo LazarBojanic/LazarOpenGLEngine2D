@@ -62,7 +62,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;irrKlang.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -80,7 +80,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;irrKlang.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -184,7 +184,6 @@
     <ClInclude Include="libraries\include\freetype\ttnameid.h" />
     <ClInclude Include="libraries\include\freetype\tttables.h" />
     <ClInclude Include="libraries\include\freetype\tttags.h" />
-    <ClInclude Include="libraries\include\ft2build.h" />
     <ClInclude Include="libraries\include\irrKlang\ik_ESoundEngineOptions.h" />
     <ClInclude Include="libraries\include\irrKlang\ik_ESoundOutputDrivers.h" />
     <ClInclude Include="libraries\include\irrKlang\ik_EStreamModes.h" />
@@ -209,7 +208,6 @@
     <ClInclude Include="src\Cube.hpp" />
     <ClInclude Include="src\DrawData.hpp" />
     <ClInclude Include="src\GameObject.hpp" />
-    <ClInclude Include="src\GameObject3D.hpp" />
     <ClInclude Include="src\IndexBuffer.hpp" />
     <ClInclude Include="src\Mesh.hpp" />
     <ClInclude Include="src\Application.hpp" />
@@ -524,7 +522,6 @@
     <None Include="assets\shaders\dvdBurnFragmentShader.glsl" />
     <None Include="assets\shaders\dvdFragmentShader.glsl" />
     <None Include="assets\shaders\dvdVertexShader.glsl" />
-    <None Include="assets\shaders\fireFragmentShader.glsl" />
     <None Include="assets\shaders\circleShader.glsl" />
     <None Include="assets\shaders\genericFragmentShader.glsl" />
     <None Include="assets\shaders\genericVertexShader.glsl" />
@@ -674,7 +671,6 @@
   <ItemGroup>
     <ClCompile Include="src\DrawData.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\GameObject3D.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Game.cpp" />

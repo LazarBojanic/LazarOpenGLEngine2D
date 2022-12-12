@@ -66,7 +66,7 @@ void Game::initVariables() {
 	this->deltaScale = 1.0f;
 
 	this->numberOfLines = 4;
-	this->numberOfEnemiesPerLine = 16;
+	this->numberOfEnemiesPerLine = 8;
 	this->enemyIndexOfProjectile = 0;
 	this->intervals = new float[4] {
 		2.0f, 4.0, 6.0f, 8.0f
@@ -271,6 +271,12 @@ void Game::update(float dt) {
 		}
 	}
 	else if (this->gameState == ACTIVE) {
+		if (dvdGameObject->getPositionX() - (dvdGameObject->getScaledSizeX() / 2.0f) <= 0.0f) {
+			dvdGameObject->setPositionX(0.0f + (dvdGameObject->getScaledSizeX() / 2.0f));
+		}
+		if (dvdGameObject->getPositionX() + (dvdGameObject->getScaledSizeX() / 2.0f) >= this->width) {
+			dvdGameObject->setPositionX(this->width - (dvdGameObject->getScaledSizeX() / 2.0f));
+		}
 		Renderer::getInstance()->draw(*dvdGameObject, true);
 		updateEnemies(dt);
 		trimEnemyProjectiles(dt);
