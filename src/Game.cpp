@@ -65,8 +65,8 @@ void Game::initVariables() {
 	this->destinationScale = 0.4f;
 	this->deltaScale = 1.0f;
 
-	this->numberOfLines = 5;
-	this->numberOfEnemiesPerLine = 16;
+	this->numberOfLines = 3;
+	this->numberOfEnemiesPerLine = 8;
 	this->enemyIndexOfProjectile = 0;
 	this->intervals = new float[4] {
 		2.0f, 4.0, 6.0f, 8.0f
@@ -426,10 +426,9 @@ void Game::checkCollisions(float dt) {
 			for (int j = 0; j < lasers->size(); j++) {
 				bool collisionX = enemies->at(i)->getPositionX() + enemies->at(i)->getScaledSizeX() >= lasers->at(j)->getPositionX() && lasers->at(j)->getPositionX() + lasers->at(j)->getScaledSizeX() >= enemies->at(i)->getPositionX();
 				bool collisionY = enemies->at(i)->getPositionY() + enemies->at(i)->getScaledSizeY() >= lasers->at(j)->getPositionY() && lasers->at(j)->getPositionY() + lasers->at(j)->getScaledSizeY() >= enemies->at(i)->getPositionY();
-				if (collisionX && collisionY) {
+				if (collisionX && collisionY) {					
 					this->soundEngine->setSoundVolume(0.1f);
 					this->soundEngine->play2D("assets\\sounds\\bleep.wav", false);
-					
 					enemies->at(i)->setIsHit(true);
 					enemies->at(i)->setPositionX(9999.0f);
 					enemies->at(i)->setPositionY(9999.0f);
