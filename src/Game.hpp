@@ -67,7 +67,8 @@ private:
 
     int currentInfinityPosition;
 
-    
+    bool singleLaser;
+
 public:
     Game(GLFWwindow* window, unsigned int width, unsigned int height);
     ~Game();
