@@ -102,4 +102,6 @@ public:
     void updateEnemyProjectiles(float dt);
     void trimEnemyProjectiles(float dt);
     void addDots(float dt);
+    void addLaser(float dt);
+    void updateLasers(float dt);
 };
