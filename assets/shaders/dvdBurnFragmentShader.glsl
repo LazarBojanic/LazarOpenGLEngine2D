@@ -24,8 +24,7 @@ float noise(vec2 coord){
 	vec2 wholePart = floor(coord);
 	vec2 decimalPart = fract(coord);
 
-	// 4 corners of a rectangle surrounding our point
-	float a = rand(wholePart);
+ 	float a = rand(wholePart + vec2(0.0, 0.0));
 	float b = rand(wholePart + vec2(1.0, 0.0));
 	float c = rand(wholePart + vec2(0.0, 1.0));
 	float d = rand(wholePart + vec2(1.0, 1.0));
@@ -51,7 +50,6 @@ vec4 burn(vec4 originalColor, vec2 uv, float time) {
 	float outerEdge = (time - uStartTime) / uDuration;
 	float innerEdge = outerEdge + thickness;
 	
-	// fade-in to the orange/black gradient
 	if (noise < innerEdge) {
 		float gradientFactor = (innerEdge - noise) / thickness;
 		gradientFactor = clamp(gradientFactor, 0.0, 1.0);
@@ -62,7 +60,6 @@ vec4 burn(vec4 originalColor, vec2 uv, float time) {
 		
 		newColor = mix(newColor, fireGradient, innerFade);
 	}
-	// fade-out of the black at the end of the gradient
 	if (noise < outerEdge) {
 		newColor.a = 1.0 - (outerEdge - noise) / 0.03;
 		newColor.a = clamp(newColor.a, 0.0, 1.0);
@@ -70,7 +67,6 @@ vec4 burn(vec4 originalColor, vec2 uv, float time) {
 	newColor.a *= originalColor.a;
 	return newColor;
 }
-
 void main(){
     vec4 texColor = texture(uTexture, uv) * uColor;
 	if(!uDestroyed){

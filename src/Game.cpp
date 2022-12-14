@@ -352,7 +352,10 @@ void Game::clear() {
 void Game::updateLaser(GameObject& laserGameObject, GameObject& dvdGameObject, float dt) {
 	if (this->laserIsShooting) {
 		laserGameObject.setPositionY(laserGameObject.getPositionY() + laserGameObject.getSpeedY() * dt);
-		laserGameObject.getDrawData()->getShader()->setVector4f("uColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true);
+		float x = 32 * glfwGetTime();
+		float red = glm::clamp((glm::sin(x) + 1.0f) / 2.0f, 0.5f, 1.0f);
+		float blue = glm::clamp((glm::sin(x) + 1.0f) / 2.0f, 0.5f, 1.0f);
+		laserGameObject.getDrawData()->getShader()->setVector4f("uColor", glm::vec4(red, 0.0f, blue, 1.0f), true);
 		Renderer::getInstance()->draw(laserGameObject, true);
 		if (laserGameObject.getPositionX() >= this->width || laserGameObject.getPositionX() <= 0 ||
 			laserGameObject.getPositionY() >= this->height || laserGameObject.getPositionY() <= 0) {
