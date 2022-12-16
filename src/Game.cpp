@@ -506,8 +506,6 @@ void Game::updateEnemyProjectiles(float dt) {
 	delete projectiles;
 }
 void Game::addDots(float dt){
-	DrawData* dotDrawData = ResourceManager::getInstance()->getDrawDataByName("dotDrawData");
-	GameObject* dvdGameObject = GameObjectManager::getInstance()->getGameObjectByName("dvdGameObject");
 	for (int i = 0; i < this->infinityPositionsCount; i++) {
 		float currentPositionX = ((glm::cos(t) + 1.0f) / 2.0f) * this->width;
 		float currentPositionY = ((glm::sin(t) * glm::cos(t) + 1.0f) / 2.0f) * this->height;
