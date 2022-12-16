@@ -13,6 +13,7 @@ irrKlang - zvuk.
 
 Uputstvo:
 1. Kopirati dll-ove iz foldera dlls iz repozitorijuma u x64/Debug ili x64/Release u zavisnoti od željene konfiguracije.
+2. Skinuti libraries folder sa repozitorijuma i staviti ga u root folder projekta pored assets,src...
 2. Build-ovati projekat u Visual Studiu i pokrenuti.
 
 Igra ima nekoliko GameState-ova:
