@@ -2,7 +2,7 @@ Lazar Bojanić 116/21 RN - Prvi domaći iz računarske grafike
 
 Projekat je rađen u Microsoft Visual Studiu 2022 (x64)
 
-Ovde stavljam upoyorenje za epilepsiju za svaki slučaj.
+Ovde stavljam upozorenje za epilepsiju za svaki slučaj.
 
 Biblioteke u upotrebi:
 GLFW - OpenGL kontekst,
@@ -37,4 +37,4 @@ LOSS{
 }.
 
 Podešavanja igre:
-U Game.cpp, u funkciji initVariables, mogu da se podese parametri igre, kao što su broj neprijatelja po koloni i redu (numberOfEnemiesPerLine, numberOfEnemyLines), i bool singleLaser koji određuje da li igra da koristi jedan laser dok je u ekranu ili više lasera.
+U Game.cpp, u funkciji initVariables, mogu da se podese parametri igre, kao što su broj neprijatelja po koloni i redu (numberOfEnemiesPerLine, numberOfEnemyLines), i bool singleLaser koji određuje da li koristi jedan ili više lasera.
