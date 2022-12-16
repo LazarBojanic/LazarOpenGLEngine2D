@@ -1,5 +1,7 @@
 Lazar Bojanić 116/21 RN - Prvi domaći iz računarske grafike
 
+Biblioteke i dll-ovi se nalaze na sledećem repozitorijumu: https://github.com/LazarBojanic/LazarOpenGLEngineOOP
+
 Projekat je rađen u Microsoft Visual Studiu 2022 (x64)
 
 Ovde stavljam upozorenje za epilepsiju za svaki slučaj.
