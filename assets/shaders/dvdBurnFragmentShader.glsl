@@ -20,7 +20,7 @@ int OCTAVES = 6;
 float rand(vec2 coord){
 	return fract(sin(dot(coord, vec2(12.9898, 78.233)))* 43758.5453123);
 }
-float noise(vec2 coord){
+float noise (vec2 coord) {
 	vec2 wholePart = floor(coord);
 	vec2 decimalPart = fract(coord);
 
@@ -45,7 +45,7 @@ float fbm(vec2 coord){
 }
 vec4 burn(vec4 originalColor, vec2 uv, float time) {
 	vec4 newColor = originalColor; // value that will be returned
-	float noise = fbm(uv);
+	float noise = fbm(uv * 5.0);
 	float thickness = 0.1;
 	float outerEdge = (time - uStartTime) / uDuration;
 	float innerEdge = outerEdge + thickness;
