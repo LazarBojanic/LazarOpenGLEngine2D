@@ -669,6 +669,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="libraries\include\glad\glad.c" />
     <ClCompile Include="src\DrawData.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
@@ -677,7 +678,6 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
-    <ClCompile Include="glad.c" />
     <ClCompile Include="libraries\include\glm\detail\glm.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\Application.cpp" />
