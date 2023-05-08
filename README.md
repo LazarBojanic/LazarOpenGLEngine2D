@@ -1,43 +1,50 @@
-Lazar Bojanić 116/21 RN - Prvi domaći iz računarske grafike
+A simple DVD vs BluRay 2D game made in OpenGL and C++.
 
-Biblioteke i dll-ovi se nalaze na sledećem repozitorijumu: https://github.com/LazarBojanic/LazarOpenGLEngineOOP
+Libraries and DLLs can be found at the following repository: https://github.com/LazarBojanic/LazarOpenGLEngineOOP
 
-Projekat je rađen u Microsoft Visual Studiu 2022 (x64)
+The project was made in Microsoft Visual Studio 2022 (x64).
 
-Ovde stavljam upozorenje za epilepsiju za svaki slučaj.
+Here I am putting an epilepsy warning just in case.
 
-Biblioteke u upotrebi:
-GLFW - OpenGL kontekst,
-Glad - OpenGL funkcije,
-stbi_image - učitavanje tekstura,
-glm - biblioteka za matematiku,
-irrKlang - zvuk.
+![animated GIF](LazarOpenGLEngine2D-1.gif)
 
-Uputstvo:
-1. Kopirati dll-ove iz foldera dlls iz repozitorijuma u x64/Debug ili x64/Release u zavisnoti od željene konfiguracije.
-2. Skinuti libraries folder sa repozitorijuma i staviti ga u root folder projekta pored assets,src...
-2. Build-ovati projekat u Visual Studiu i pokrenuti.
+![animated GIF](LazarOpenGLEngine2D-2.gif)
 
-Igra ima nekoliko GameState-ova:
+Libraries in use:
+
+GLFW - OpenGL context,
+Glad - OpenGL functions,
+stbi_image - texture loading,
+glm - mathematics library,
+irrKlang - sound.
+
+Instructions:
+
+Copy DLLs from the "dlls" folder in the repository to x64/Debug or x64/Release depending on the desired configuration.
+Download the "libraries" folder from the repository and place it in the project's root folder next to "assets", "src"...
+Build the project in Visual Studio and run it.
+
+The game has several GameStates:
+
 SCREEN_SAVER,
 TRANSITION_TO_ACTIVE,
 ACTIVE,
 WIN,
 LOSS.
 
-Kontrole:
-SCREEN_SAVER{
-    B - Započni igru,
-    R - Recentriraj dvd logo.
-},
+Controls:
+    SCREEN_SAVER{
+    B - Start the game,
+    R - Reset dvd logo.
+    },
 ACTIVE{
-    Left Arrow/A - pomeranje dvd-a ulevo,
-    Right Arrow/D - pomeranje dvd-a udesno,
-    Space - pucanje lasera.
-},
+    Left Arrow/A - Move the dvd to the left,
+    Right Arrow/D - Move the dvd to the right,
+    Space - Shoot lasers.
+    },
 LOSS{
-    R - Restartuj igru.
+    R - Restart the game.
 }.
 
-Podešavanja igre:
-U Game.cpp, u funkciji initVariables, mogu da se podese parametri igre, kao što su broj neprijatelja po koloni i redu (numberOfEnemiesPerLine, numberOfEnemyLines), i bool singleLaser koji određuje da li koristi jedan ili više lasera.
+Game settings:
+In Game.cpp, in the initVariables function, game parameters can be set, such as the number of enemies per column and row (numberOfEnemiesPerLine, numberOfEnemyLines), and a bool called "singleLaser" which determines whether to use one or more lasers.
