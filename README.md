@@ -31,16 +31,16 @@ WIN,
 LOSS.
 
 Controls:
-    SCREEN_SAVER{
+- SCREEN_SAVER{
     B - Start the game,
     R - Reset dvd logo.
     },
-ACTIVE{
+- ACTIVE{
     Left Arrow/A - Move the dvd to the left,
     Right Arrow/D - Move the dvd to the right,
     Space - Shoot lasers.
     },
-LOSS{
+- LOSS{
     R - Restart the game.
 }.
 
