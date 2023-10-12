@@ -513,6 +513,8 @@
     <ClInclude Include="src\VertexBuffer.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="assets\shaders\backgroundFragmentShader.glsl" />
     <None Include="assets\shaders\backgroundVertexShader.glsl" />
     <None Include="assets\shaders\bluRayFragmentShader.glsl" />
@@ -530,6 +532,9 @@
     <None Include="assets\shaders\triangleFragmentShader.glsl" />
     <None Include="assets\shaders\triangleVertexShader.glsl" />
     <None Include="assets\shaders\testFragmentShader.glsl" />
+    <None Include="dlls\ikpFlac.dll" />
+    <None Include="dlls\ikpMP3.dll" />
+    <None Include="dlls\irrKlang.dll" />
     <None Include="libraries\include\glm\detail\func_common.inl" />
     <None Include="libraries\include\glm\detail\func_common_simd.inl" />
     <None Include="libraries\include\glm\detail\func_exponential.inl" />
@@ -692,10 +697,16 @@
     <Image Include="assets\textures\dvdLogo.png" />
     <Image Include="assets\textures\laser.png" />
     <Image Include="assets\textures\score.png" />
+    <Image Include="LazarOpenGLEngine2D-1.gif" />
+    <Image Include="LazarOpenGLEngine2D-2.gif" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="assets\sounds\bleep.wav" />
     <Media Include="assets\sounds\lose.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libraries\lib\glfw3.lib" />
+    <Library Include="libraries\lib\irrKlang.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

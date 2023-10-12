@@ -1,6 +1,6 @@
 A simple DVD vs BluRay 2D game made in OpenGL and C++.
 
-Libraries and DLLs can be found at the following repository: https://github.com/LazarBojanic/LazarOpenGLEngineOOP
+Libraries and DLLs can be found at the following repository: https://github.com/LazarBojanic/LazarOpenGLEngine2D
 
 The project was made in Microsoft Visual Studio 2022 (x64).
 

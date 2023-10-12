@@ -1,1 +1,2 @@
 D:\CPP\LazarOpenGLEngine2D\x64\Release\LazarOpenGLEngine2D.exe
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Release\LazarOpenGLEngine2D.exe
