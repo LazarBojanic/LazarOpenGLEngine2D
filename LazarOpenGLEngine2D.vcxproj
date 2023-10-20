@@ -390,7 +390,7 @@
     <ClInclude Include="libraries\include\glm\ext\vector_ulp.hpp" />
     <ClInclude Include="libraries\include\glm\fwd.hpp" />
     <ClInclude Include="libraries\include\glm\geometric.hpp" />
-    <ClInclude Include="libraries\include\glm\GLData.hpp" />
+    <ClInclude Include="libraries\include\glm\Util.hpp" />
     <ClInclude Include="libraries\include\glm\glm.hpp" />
     <ClInclude Include="libraries\include\glm\gtc\bitfield.hpp" />
     <ClInclude Include="libraries\include\glm\gtc\color_space.hpp" />
@@ -505,7 +505,7 @@
     <ClInclude Include="libraries\include\KHR\khrplatform.h" />
     <ClInclude Include="libraries\include\stb_image\stb_image.h" />
     <ClInclude Include="src\ResourceManager.hpp" />
-    <ClInclude Include="src\GLData.hpp" />
+    <ClInclude Include="src\Util.hpp" />
     <ClInclude Include="src\Renderer.hpp" />
     <ClInclude Include="src\Texture2D.hpp" />
     <ClInclude Include="src\Triangle.hpp" />

@@ -36,14 +36,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         }
     }
 }
-void GLAPIENTRY debugCallback(GLenum source,
+void GLAPIENTRY debugCallback(
+    GLenum source,
     GLenum type,
     GLuint id,
     GLenum severity,
     GLsizei length,
     const GLchar* message,
     const void* userParam){
-    std::cout << "GL CALLBACK-> Type: " << type << "Severity: " << severity << "Message: " << message << std::endl;
+    std::cout << "GL CALLBACK-> Type: " << Util::getDebugMeaning(type) << ", Severity: " << Util::getDebugMeaning(severity) << ", Message: " << message << std::endl;
 }
 void Application::initWindow() {
     initGlfw();

@@ -1,0 +1,16 @@
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\libraries\include\glad\glad.c;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\glad.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\DrawData.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\DrawData.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\GameObject.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\GameObject.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\IndexBuffer.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\IndexBuffer.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\Mesh.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\Mesh.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\Game.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\Game.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\Main.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\Main.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\Shader.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\Shader.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\GameObjectManager.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\GameObjectManager.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\libraries\include\glm\detail\glm.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\glm.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\ResourceManager.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\ResourceManager.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\Application.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\Application.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\Renderer.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\Renderer.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\Texture2D.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\Texture2D.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\VertexArray.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\VertexArray.obj
+C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\src\VertexBuffer.cpp;C:\Users\bojan\CPlusPlusProjects\LazarOpenGLEngine2D\x64\Debug\VertexBuffer.obj

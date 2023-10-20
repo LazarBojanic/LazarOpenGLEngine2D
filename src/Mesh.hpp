@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLData.hpp"
+#include "Util.hpp"
 #include "VertexArray.hpp"
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
