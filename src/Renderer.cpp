@@ -17,6 +17,19 @@ Renderer* Renderer::getInstance(){
     return instance;
 }
 
+void Renderer::drawAll(bool scaled) {
+    std::vector<GameObject*>* gameObjectList = GameObjectManager::getInstance()->getGameObjectList();
+    for (int i = 0; i < gameObjectList->size(); i++) {
+        draw(*gameObjectList->at(i), scaled);
+    }
+}
+void Renderer::drawAllUntextured(bool scaled) {
+    std::vector<GameObject*>* gameObjectList = GameObjectManager::getInstance()->getGameObjectList();
+    for (int i = 0; i < gameObjectList->size(); i++) {
+        drawUntextured(*gameObjectList->at(i), scaled);
+    }
+}
+
 void Renderer::draw(GameObject& gameObject, bool scaled) {
     glm::mat4 modelView = glm::mat4(1.0f);
     modelView = glm::translate(modelView, glm::vec3(glm::vec2(gameObject.getPositionX(), gameObject.getPositionY()), 0.0f));

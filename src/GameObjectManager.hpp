@@ -24,6 +24,8 @@ public:
 	std::vector<GameObject*>* getGameObjectsByTag(std::string tag);
 	void removeGameObject(GameObject* gameObject);
 	void clear(bool reinitialize);
-
+	inline std::vector<GameObject*>* getGameObjectList() {
+		return this->gameObjectList;
+	}
 };
 
