@@ -94,8 +94,8 @@ void Game::initVariables() {
 void Game::initResources() {
 	glm::mat4 orthographicProjection = glm::ortho(0.0f, (float)this->width, 0.0f, (float)this->height, -1.0f, 1.0f);
 	
-	Quad* quad = new Quad();
-	Triangle* triangle = new Triangle();
+	Quad* quad = new Quad(true);
+	Triangle* triangle = new Triangle(true);
 
 	Mesh* projectileMesh = ResourceManager::getInstance()->addMesh(*triangle, "projectileMesh", 0, 3, 1, 3, 2, 2);
 	Mesh* dvdMesh = ResourceManager::getInstance()->addMesh(*quad, "dvdMesh", 0, 3, 1, 3, 2, 2);

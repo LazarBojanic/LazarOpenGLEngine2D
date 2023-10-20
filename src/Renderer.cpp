@@ -30,7 +30,12 @@ void Renderer::draw(GameObject& gameObject, bool scaled) {
     gameObject.getDrawData()->getMesh()->getVertexArray()->bind();
     gameObject.getDrawData()->getTexture2D()->bind(0);
     gameObject.getDrawData()->getShader()->setMatrix4f("uModelView", modelView, true);
-    glDrawElements(GL_TRIANGLES, gameObject.getDrawData()->getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
+    if (gameObject.getDrawData()->getMesh()->getPrimitive()->getIsIndexed()) {
+        glDrawElements(GL_TRIANGLES, gameObject.getDrawData()->getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
+    }
+    else {
+        glDrawArrays(GL_TRIANGLES, 0, gameObject.getDrawData()->getMesh()->getPrimitive()->getUnindexedVertexCount());
+    }
     gameObject.getDrawData()->getMesh()->getVertexArray()->unbind();
     gameObject.getDrawData()->getShader()->unbind();
 }
@@ -46,8 +51,12 @@ void Renderer::drawUntextured(GameObject& gameObject, bool scaled) {
     }
     gameObject.getDrawData()->getMesh()->getVertexArray()->bind();
     gameObject.getDrawData()->getShader()->setMatrix4f("uModelView", modelView, true);
-    glDrawElements(GL_TRIANGLES, gameObject.getDrawData()->getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
-    gameObject.getDrawData()->getMesh()->getVertexArray()->unbind();
+    if (gameObject.getDrawData()->getMesh()->getPrimitive()->getIsIndexed()) {
+        glDrawElements(GL_TRIANGLES, gameObject.getDrawData()->getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
+    }
+    else {
+        glDrawArrays(GL_TRIANGLES, 0, gameObject.getDrawData()->getMesh()->getPrimitive()->getUnindexedVertexCount());
+    }    gameObject.getDrawData()->getMesh()->getVertexArray()->unbind();
     gameObject.getDrawData()->getShader()->unbind();
 }
 void Renderer::colorBackground(glm::vec4 color) {
