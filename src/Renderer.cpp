@@ -32,6 +32,7 @@ void Renderer::draw(GameObject& gameObject, bool scaled) {
     gameObject.getDrawData()->getShader()->setMatrix4f("uModelView", modelView, true);
     glDrawElements(GL_TRIANGLES, gameObject.getDrawData()->getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
     gameObject.getDrawData()->getMesh()->getVertexArray()->unbind();
+    gameObject.getDrawData()->getShader()->unbind();
 }
 void Renderer::drawUntextured(GameObject& gameObject, bool scaled) {
     glm::mat4 modelView = glm::mat4(1.0f);
@@ -47,6 +48,7 @@ void Renderer::drawUntextured(GameObject& gameObject, bool scaled) {
     gameObject.getDrawData()->getShader()->setMatrix4f("uModelView", modelView, true);
     glDrawElements(GL_TRIANGLES, gameObject.getDrawData()->getMesh()->getPrimitive()->getIndicesCount(), GL_UNSIGNED_INT, 0);
     gameObject.getDrawData()->getMesh()->getVertexArray()->unbind();
+    gameObject.getDrawData()->getShader()->unbind();
 }
 void Renderer::colorBackground(glm::vec4 color) {
     glClearColor(color.x, color.y, color.z, color.w);
